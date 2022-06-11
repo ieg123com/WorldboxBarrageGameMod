@@ -1,0 +1,1 @@
+{"root":[{"assemblyName":"Assembly-CSharp","nameSpace":"","className":"LogHandler","methodName":"init","loadTypes":0,"isUnityClass":false},{"assemblyName":"UnityEngine.Purchasing.Codeless","nameSpace":"UnityEngine.Purchasing","className":"CodelessIAPStoreListener","methodName":"InitializeCodelessPurchasingOnLoad","loadTypes":0,"isUnityClass":true}]}

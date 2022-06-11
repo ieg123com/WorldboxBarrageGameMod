@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1085802747657",
+    "firebase_url": "https://worldbox-g.firebaseio.com",
+    "project_id": "worldbox-g",
+    "storage_bucket": "worldbox-g.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085802747657:android:0087a23680a9c84c",
+        "android_client_info": {
+          "package_name": "com.mkarpenko.worldbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1085802747657-q5a79e6bh6dr6lociruf4h39614vii7f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCc5fnrMUOo2mMRg5rZQ2ATPaWoQddsGM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

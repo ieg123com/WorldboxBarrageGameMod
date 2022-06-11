@@ -1,0 +1,26 @@
+# HELLO
+# GOTTA LOAD MODS FAST
+# LOADING MODS NOW
+########
+
+# MAIN PATH: D:/projects/worldbox/Assets/StreamingAssets/mods/
+# TOTAL MODS: 1
+
+---------START------------------------------------------------------------------------------------
+## LOADING MOD N 1
+D:/projects/worldbox/Assets/StreamingAssets/mods/test_asset_load
+# CHECKING MOD... test_asset_load
+
+## CHECKING MOD FOLDER... powers
+## SUB FOLDERS FOUND: 1
+
+
+# CHECKING PATH... smile
+FILES: 1
+
+D:/projects/worldbox/Assets/StreamingAssets/mods/test_asset_load\powers\smile\iconSmilePlanet.png
+# LOAD TEXTURE: iconSmilePlanet.png
+ADDING TEXTURE... @wb_iconSmilePlanet.png
+---------FINISH-----------------------------------------------------------------------------------
+
+
