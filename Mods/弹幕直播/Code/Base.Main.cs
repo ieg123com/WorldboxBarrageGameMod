@@ -72,13 +72,22 @@ namespace BarrageGame{
 
         }
 
-        
+        void Start()
+        {
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,5));
+        }
 
         public float tempTime = 0f;
         void Update()
         {
-            webSocketToCCWSS.Update();
-            loadStatus.Update();
+            try{
+                webSocketToCCWSS.Update();
+                loadStatus.Update();
+            }catch(Exception e)
+            {
+                Debug.Log(e);
+            }
+
 
             tempTime += Time.deltaTime;
             if(tempTime >= 1f)

@@ -33,8 +33,10 @@ namespace BarrageGame
         public float aTimer = 0f;
 
         private bool taskCompleted = false;
+
         void Awake()
         {
+            Debug.Log(">>>>>>>>>>> DivideTheWorld.Awake");
 
         }
 
@@ -145,13 +147,13 @@ namespace BarrageGame
 
         void OnCompeleted()
         {
+            // 任务完成
             Destroy(gameObject);
-            
+            ControlHelper.GameOver();
         }
         void OnDisable()
         {
-            // 任务完成
-            ControlHelper.GameOver();
+            Debug.Log(">>>>>>>>>>> DivideTheWorld.OnDisable");
         }
     }
 }

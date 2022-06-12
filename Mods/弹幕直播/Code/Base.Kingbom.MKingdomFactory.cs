@@ -15,7 +15,7 @@ namespace BarrageGame
             mkingdom.id = kingdom.id;
             mkingdom.alive = true;
             mkingdom.kingdom = kingdom;
-            kingdom.headSprite = Sprites.LoadSprite($"{Mod.Info.Path}/icon.png");
+            kingdom.headSprite = Sprites.LoadSprite($"{Mod.Info.Path}/GameResources/Computer.png");
             return mkingdom;
         }
 

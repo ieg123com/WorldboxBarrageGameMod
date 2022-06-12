@@ -98,7 +98,8 @@ namespace ChineseName
 			"妍", "笑", "指", "薪", "修", "祜", "永", "绥", "吉", "劭",
 			"矩", "步", "引", "领", "俯", "仰", "廊", "庙", "谓", "语",
 			"助", "者", "焉", "哉", "乎", "也"};
-			//this.t.fixedList = new List<string> { "星棋盘王朝", "屹昂帝国" };
+			this.t.fixedList = new List<string> { "星棋盘王朝", "屹昂帝国" };
+			//this.t.fixedList = new List<string>();
 			this.t.templates = new string[]{ "R.3Faddition_start","part1","R.2Fpart1","addition_end"};
 			//兽人，直接复制人类
 			this.clone("orc_kingdom", "human_kingdom");
@@ -111,7 +112,8 @@ namespace ChineseName
 			//人类城市，直接复制国家命名
 			this.clone("human_city", "human_kingdom");
 			this.t.addition_endList = new List<string> { "城", "镇", "村", "域","州","府" };
-			//this.t.fixedList = new List<string> { "星棋盘州", "人间府" };
+			this.t.fixedList = new List<string> { "星棋盘州", "人间府" };
+			//this.t.fixedList = new List<string>();
 			this.t.templates = new string[] { "part1", "R.2Fpart1", "addition_end" };
 			//兽人，直接复制人类
 			this.clone("orc_city", "human_city");
@@ -124,7 +126,8 @@ namespace ChineseName
 			//人类文化，直接复制城市
 			this.clone("human_culture", "human_city");
 			this.t.addition_endList = new List<string> { "文化" ,"氏"};
-			//this.t.fixedList = new List<string> { "一米氏", "人间文化" };
+			this.t.fixedList = new List<string> { "一米氏", "人间文化" };
+			//this.t.fixedList = new List<string>();
 			this.t.templates = new string[] { "part1","part1","addition_end"};
 			//兽人，直接复制人类
 			this.clone("orc_culture", "human_culture");

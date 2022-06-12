@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using ReflectionUtility;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 
@@ -104,6 +105,26 @@ namespace BarrageGame
                 return true;
             }
             return false;
+        }
+
+        static public MapText GetMapText(this MKingdom self)
+        {
+            var list = Reflection.GetField(MapNamesManager.instance.GetType(),MapNamesManager.instance,"list") as List<MapText>;
+            if(list == null)
+                {
+                    // 未知原因
+                    Debug.Log($"[error] list == null in GetMapText");
+                }
+            return list.Find(delegate(MapText mapText){
+                var kingdom = Reflection.GetField(mapText.GetType(),mapText,"Kingdom") as Kingdom;
+                if(kingdom == null)
+                {
+                    // 未知原因
+                    Debug.Log($"[error] list.Count = {list.Count} in GetMapText");
+                }
+
+                return kingdom.id == self.id;
+            });
         }
     }
 }

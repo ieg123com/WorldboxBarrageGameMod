@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using NCMS;
 using NCMS.Utils;
 using ReflectionUtility;
@@ -10,12 +11,35 @@ namespace BarrageGame
     // 加入 [国家id] ： 获得国家的控制权
     // 宣战 [国家id] ： 向一个国家进行宣战
     // 和平 [国家id] ： 需要双方都发送才能停止战斗
-    //  
+    // 
     public class KingdomMsg
     {
         static public void MsgAll(Player player,MessageDistribute.NormalMsg msg)
         {
             Debug.Log($"msg {msg.msg}");
+            if(player.isKingPlayer)
+            {
+                // 国家掌权者
+                var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+                if(mKingdom == null)
+                {
+                    return;
+                }
+                var mapText = mKingdom.GetMapText();
+                if(mapText == null)
+                {
+                    return;
+                }
+                var go = new GameObject("ChatBubble");
+                go.transform.SetParent(MapNamesManager.instance.transform);
+                var uiBubble = go.AddComponent<UIBubble>();
+                uiBubble.SetBottomSprite(Sprites.LoadSprite($"{Mod.Info.Path}/GameResources/bottom.png"));
+                var rect = uiBubble.GetComponent<RectTransform>();
+                rect.anchoredPosition = mapText.GetComponent<RectTransform>().anchoredPosition + new Vector2(0,10);
+                Debug.Log($"rect.anchoredPosition = {rect.anchoredPosition}");
+                uiBubble.SetMessage(msg.msg);
+
+            }
         }
 
         static public void MsgJoin(Player player,MessageDistribute.NormalMsg msg)

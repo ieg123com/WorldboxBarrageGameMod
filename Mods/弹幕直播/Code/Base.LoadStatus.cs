@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace BarrageGame
 {
+    // 地图加载状态
     public class LoadStatus
     {
         public bool lastStatus = false;

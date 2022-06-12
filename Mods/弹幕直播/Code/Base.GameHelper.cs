@@ -18,7 +18,7 @@ namespace BarrageGame
             };
             var moveCamera = Camera.main.GetComponent<MoveCamera>();
             Camera.main.orthographicSize = MapBox.width/2f;
-            GameObjects.FindEvenInactive("BottomElements").SetActive(false);
+            //GameObjects.FindEvenInactive("BottomElements").SetActive(false);
         }
         // 加载地图
         static public void LoadMapStore(int id)
