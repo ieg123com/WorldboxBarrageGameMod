@@ -13,6 +13,7 @@ namespace BarrageGame
             MessageDistribute.instance.BindNormalMsgEvent("加入",KingdomMsg.MsgJoin);
             MessageDistribute.instance.BindNormalMsgEvent("宣战",KingdomMsg.MsgSplite);
             MessageDistribute.instance.BindNormalMsgEvent("和平",KingdomMsg.MsgPeace);
+            MessageDistribute.instance.BindNormalMsgEvent("协助",KingdomMsg.MsgAssist);
         }
     }
 }

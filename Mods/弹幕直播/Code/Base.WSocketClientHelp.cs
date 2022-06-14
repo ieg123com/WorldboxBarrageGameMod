@@ -69,7 +69,9 @@ namespace BarrageGame
                     isUserClose = false;
                     ws = new ClientWebSocket();
                     await ws.ConnectAsync(uri, CancellationToken.None);
-
+                    actions.Enqueue(() =>{
+                        Debug.Log("连接成功");
+                    });
                     if (OnOpen != null)
                         actions.Enqueue(() =>
                         {
@@ -130,6 +132,9 @@ namespace BarrageGame
                     if (!isUserClose)
                         Close(ws.CloseStatus.Value, ws.CloseStatusDescription + netErr);
                 }
+                actions.Enqueue(() =>{
+                    Debug.Log("WebSocket Over...");
+                });
             });
 
         }
@@ -201,6 +206,11 @@ namespace BarrageGame
                 ws.Abort();
                 ws.Dispose();
 
+                actions.Enqueue(() =>{
+                    Debug.Log($"连接断开 1{statusDescription}");
+                });
+
+                
                 if (OnClose != null)
                     actions.Enqueue(() =>
                     {

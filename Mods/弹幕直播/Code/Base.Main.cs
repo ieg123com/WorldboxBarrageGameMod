@@ -6,7 +6,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using ReflectionUtility;
 
+
+
 namespace BarrageGame{
+
+    public class User
+    {
+        public string _id;
+        public string Name;
+    
+    }
 
     [ModEntry]
     class Main : MonoBehaviour{
@@ -19,8 +28,9 @@ namespace BarrageGame{
         public PlayerManager playerManager;
 
         public MKingdomManager mKingdomManager;
+        public UnitManager unitManager;
 
-        public WebSocketToCCWSS webSocketToCCWSS;
+        public WebSocketToSelf DanmakuMessage;
 
         public LoadStatus loadStatus;
 
@@ -32,18 +42,28 @@ namespace BarrageGame{
 
 
         static public int grenadeNum = 0;
+
+        static public List<Actor> allActor = new List<Actor>();
+
+        static public Queue<Action> actions = new Queue<Action>();
+
         void Awake(){
             instance = this;
 
             messageDistribute = new MessageDistribute();
             playerManager = new PlayerManager();
             mKingdomManager = new MKingdomManager();
+            unitManager = new UnitManager();
 
 
             loadStatus = new LoadStatus();
 
 
             GameModel = new GameObject("GameModel");
+
+
+
+            Unit.RoundChannel = Sprites.LoadSprite($"{Mod.Info.Path}/GameResources/round_channel.png").texture;
 
             Debug.Log("Test Start");
 
@@ -62,32 +82,65 @@ namespace BarrageGame{
 
             Debug.Log("Test Over");
 
-            webSocketToCCWSS = new WebSocketToCCWSS();
-            webSocketToCCWSS.Connect("ws://127.0.0.1:8080");
+            DanmakuMessage = new WebSocketToSelf();
+            DanmakuMessage.Connect("ws://127.0.0.1:8088");
 
 
 
             MKingdomHelper.InitEvent();
             MessageHandle.InitEvent();
 
+
+            Debug.Log($"SaveManager.generateMainPath(\"saves\") {SaveManager.generateMainPath("saves")}");
+
+
+
+
+            DrawIcon.Init();
+        }
+
+        static public void DrawTest(MapIconAsset pAsset)
+        {
+
+
+            //foreach(var actor in allActor)
+            //{
+   
+             //   MapIconLibrary.drawMark(pAsset, actor.currentTile, null, null, null, null);
+            //}
         }
 
         void Start()
         {
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,5));
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,8));
         }
 
         public float tempTime = 0f;
         void Update()
         {
             try{
-                webSocketToCCWSS.Update();
+                DanmakuMessage.Update();
                 loadStatus.Update();
+
+                while(actions.Count > 0)
+                {
+                    var action = actions.Dequeue();
+                    action();
+                }
             }catch(Exception e)
             {
                 Debug.Log(e);
             }
 
+            if (Input.GetKeyDown(KeyCode.V) && startGame)
+            {
+                if(GameObjects.FindEvenInactive("BottomElements").active == true)
+                {
+                    GameObjects.FindEvenInactive("BottomElements").SetActive(false);
+                }else{
+                    GameObjects.FindEvenInactive("BottomElements").SetActive(true);
+                }
+            }
 
             tempTime += Time.deltaTime;
             if(tempTime >= 1f)
@@ -100,7 +153,7 @@ namespace BarrageGame{
             if(grenadeNum > 0)
             {
                 --grenadeNum;
-                var worldTile = MapBox.instance.GetTile(UnityEngine.Random.Range(0,MapBox.width),UnityEngine.Random.Range(0,MapBox.width));
+                var worldTile = MapBox.instance.GetTile(UnityEngine.Random.Range(0,MapBox.width),UnityEngine.Random.Range(0,MapBox.height));
 
                 var drop = MapBox.instance.dropManager.spawn(worldTile, "napalmBomb", -1f, -1f);
                 Reflection.SetField<bool>(drop, "soundOn", true);
@@ -111,6 +164,15 @@ namespace BarrageGame{
 
         static void SpawnTest()
         {
+            var worldTile = MapBox.instance.GetTile(UnityEngine.Random.Range(0,MapBox.width),UnityEngine.Random.Range(0,MapBox.height));
+            var unit = UnitFactory.Create(worldTile,"humans");
+            unit.head = Sprites.LoadSprite($"{Mod.Info.Path}/GameResources/head.png");
+            unit.Apply();
+
+
+
+
+            return;
             Camera.main.transform.position = new Vector3(){
                 x=MapBox.width/2f,
                 y=MapBox.height/2f
@@ -231,6 +293,7 @@ namespace BarrageGame{
 
         void LateUpdate()
         {
+
             //MKingdomManager.instance.LateUpdate();
             if(sprite)
             {

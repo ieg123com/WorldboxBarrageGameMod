@@ -75,7 +75,7 @@ namespace BarrageGame
 
         public void DistributeMessage(object sender, string data)
         {
-
+            Debug.Log(data);
             var msgBase = JsonConvert.DeserializeObject(data, typeof(MsgBase)) as MsgBase;
             PlayerInfo info = new PlayerInfo();
             info.uid = msgBase.uid;

@@ -17,16 +17,35 @@ namespace BarrageGame
         static public void MsgAll(Player player,MessageDistribute.NormalMsg msg)
         {
             Debug.Log($"msg {msg.msg}");
-            if(player.isKingPlayer)
+            if(player.isKingPlayer == true)
             {
                 // 国家掌权者
                 var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
-                if(mKingdom == null)
+                if(mKingdom != null)
                 {
-                    return;
+                    var mapText = mKingdom.GetMapText();
+                    if(mapText == null)
+                    {
+                        return;
+                    }
+                    var go = new GameObject("ChatBubble");
+                    go.transform.SetParent(MapNamesManager.instance.transform);
+                    var uiBubble = go.AddComponent<UIBubble>();
+                    uiBubble.SetBottomSprite(Sprites.LoadSprite($"{Mod.Info.Path}/GameResources/bottom.png"));
+                    var rect = uiBubble.GetComponent<RectTransform>();
+                    rect.anchoredPosition = mapText.GetComponent<RectTransform>().anchoredPosition + new Vector2(0,10);
+                    Debug.Log($"rect.anchoredPosition = {rect.anchoredPosition}");
+                    uiBubble.SetMessage(msg.msg);
+
+                    
                 }
-                var mapText = mKingdom.GetMapText();
-                if(mapText == null)
+            }
+            //if(player.unitInstanceId != 0)
+            {
+                // 国家协助者
+                Debug.Log($"player.unitInstanceId = {player.unitInstanceId}");
+                var unit = UnitManager.instance.GetByKey(player.unitInstanceId);
+                if(unit == null)
                 {
                     return;
                 }
@@ -35,11 +54,16 @@ namespace BarrageGame
                 var uiBubble = go.AddComponent<UIBubble>();
                 uiBubble.SetBottomSprite(Sprites.LoadSprite($"{Mod.Info.Path}/GameResources/bottom.png"));
                 var rect = uiBubble.GetComponent<RectTransform>();
-                rect.anchoredPosition = mapText.GetComponent<RectTransform>().anchoredPosition + new Vector2(0,10);
+                rect.anchoredPosition = GameHelper.MapText.TransformPosition(unit.actor.currentTile.posV3)+ new Vector2(0,10);
                 Debug.Log($"rect.anchoredPosition = {rect.anchoredPosition}");
                 uiBubble.SetMessage(msg.msg);
 
+
             }
+                
+            
+
+
         }
 
         static public void MsgJoin(Player player,MessageDistribute.NormalMsg msg)
@@ -145,6 +169,49 @@ namespace BarrageGame
             {
                 PeaceInitiator.peaceList.Add(mKingdom.id);
             }
+        }
+        // 协助
+        static public void MsgAssist(Player player,MessageDistribute.NormalMsg msg)
+        {
+            if(player.isKingPlayer == true)
+            {
+                Debug.Log($"玩家 {player.name} 已经加入国家 {player.kingdomCivId}");
+                return;
+            }
+            if(player.unitInstanceId != 0)
+            {
+                Debug.Log($"玩家 {player.name} 已经协助国家 {player.kingdomCivId}");
+                return;
+            }
+            var comm = msg.msg.Split(' ');
+            if(comm.Length < 2)
+            {
+                // 命令错误
+                return;
+            }
+            var mKingdom = MKingdomManager.instance.GetByKey($"k_{comm[1]}");
+            if(mKingdom == null)
+            {
+                return;
+            }
+            var tile = GameHelper.KingdomThings.GetCapitalTile(mKingdom.kingdom);
+            if(tile == null)
+            {
+                // 这个国家没救了，领土都没了
+                return ;
+            }
+            var unit = UnitFactory.Create(tile,"humans");
+            player.kingdomCivId = mKingdom.id;
+            player.unitInstanceId = unit.instanceId;
+            unit.ownerPlayerUid = player.uid;
+            unit.actor.CallMethod("setKingdom",mKingdom.kingdom);
+            unit.actor.setStatsDirty();
+            if(player.headSprite != null)
+            {
+                unit.head = player.headSprite;
+                unit.Apply();
+            }
+
         }
     }
 

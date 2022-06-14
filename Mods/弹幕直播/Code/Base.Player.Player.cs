@@ -26,6 +26,8 @@ namespace BarrageGame
         public string kingdomCivId;
         // 是国王玩家，掌权者
         public bool isKingPlayer = false;
+        // 控制的单位uid
+        public int unitInstanceId = 0;
         public long lastSpeechTime = 0;
 
         public void Start()
@@ -56,6 +58,12 @@ namespace BarrageGame
             {
                 var mKingdom = MKingdomManager.instance.GetByKey(kingdomCivId);
                 mKingdom.SetHeadSprite(headSprite);
+            }
+            if(unitInstanceId != 0)
+            {
+                var unit = UnitManager.instance.GetByKey(unitInstanceId);
+                unit.head = headSprite;
+                unit.Apply();
             }
         }
         

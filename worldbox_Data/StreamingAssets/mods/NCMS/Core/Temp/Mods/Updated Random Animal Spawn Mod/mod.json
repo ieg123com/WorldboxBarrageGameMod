@@ -1,0 +1,8 @@
+{
+    "name": "Updated Random Animal Spawn Mod",
+    "author": "Xiphos 🦀#0615",
+    "version": "1.0.1",
+    "startPoint": "Main.cs",
+    "description": "This mod adds the following animals to randomly spawn:Cows (Spawns on grass soil), Cats (Spawns on forest soil), Turtles (Spawns on Sand, aka beaches), Crabs (Spawns on Sand, aka beaches), Penguins (Spawns on Forest Frozen Soil)",
+    "iconPath": "icon.png"
+}

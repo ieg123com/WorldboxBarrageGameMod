@@ -28,7 +28,7 @@ namespace BarrageGame
 
             PlayerManager.instance.Clear();
             MKingdomManager.instance.Clear();
-
+            UnitManager.instance.Clear();
 
             MKingdomHelper.Init();
 
@@ -37,7 +37,7 @@ namespace BarrageGame
 
             Main.startGame = true;
 
-            //GameHelper.ResetCamera();
+            GameHelper.ResetCamera();
             //GameObjects.FindEvenInactive("BottomElements").SetActive(false);
         }
 
@@ -60,7 +60,7 @@ namespace BarrageGame
             PlayerManager.instance.Clear();
             MKingdomManager.instance.Clear();
 
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,5));
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,8));
         }
 
 
