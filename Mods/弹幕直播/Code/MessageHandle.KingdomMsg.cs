@@ -213,6 +213,76 @@ namespace BarrageGame
             }
 
         }
+
+        static public void MsgToAttack(Player player,MessageDistribute.NormalMsg msg)
+        {
+            if(player.kingdomCivId == null || player.kingdomCivId == "")
+            {
+                Debug.Log($"玩家 {player.name} 还没加入国家");
+                return;
+            }
+            if(player.isKingPlayer == false)
+            {
+                Debug.Log($"玩家 {player.name} 没有控制权 {player.kingdomCivId}");
+                return;
+            }
+            var comm = msg.msg.Split(' ');
+            if(comm.Length < 2)
+            {
+                // 命令错误
+                return;
+            }
+            var mKingdom = MKingdomManager.instance.GetByKey($"k_{comm[1]}");
+            var PeaceInitiator = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+            if(mKingdom == null || PeaceInitiator == null)
+            {
+                return;
+            }
+
+            PeaceInitiator.ToAttackKingdom(mKingdom);
+        }
+
+        static public void ToBackArmy(Player player,MessageDistribute.NormalMsg msg)
+        {
+            if(player.kingdomCivId == null || player.kingdomCivId == "")
+            {
+                Debug.Log($"玩家 {player.name} 还没加入国家");
+                return;
+            }
+            if(player.isKingPlayer == false)
+            {
+                Debug.Log($"玩家 {player.name} 没有控制权 {player.kingdomCivId}");
+                return;
+            }
+
+            var PeaceInitiator = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+            if(PeaceInitiator == null)
+            {
+                return;
+            }
+            PeaceInitiator.ToBackArmy();
+        }
+
+        static public void ToShowDiplomacy(Player player,MessageDistribute.NormalMsg msg)
+        {
+            if(player.kingdomCivId == null || player.kingdomCivId == "")
+            {
+                Debug.Log($"玩家 {player.name} 还没加入国家");
+                return;
+            }
+            if(player.isKingPlayer == false)
+            {
+                Debug.Log($"玩家 {player.name} 没有控制权 {player.kingdomCivId}");
+                return;
+            }
+
+            var PeaceInitiator = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+            if(PeaceInitiator == null)
+            {
+                return;
+            }
+            PeaceInitiator.ToShowDiplomacy();
+        }
     }
 
 

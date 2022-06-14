@@ -30,7 +30,7 @@ namespace BarrageGame{
         public MKingdomManager mKingdomManager;
         public UnitManager unitManager;
 
-        public WebSocketToSelf DanmakuMessage;
+        public WebSocketToCCWSS DanmakuMessage;
 
         public LoadStatus loadStatus;
 
@@ -82,8 +82,8 @@ namespace BarrageGame{
 
             Debug.Log("Test Over");
 
-            DanmakuMessage = new WebSocketToSelf();
-            DanmakuMessage.Connect("ws://127.0.0.1:8088");
+            DanmakuMessage = new WebSocketToCCWSS();
+            DanmakuMessage.Connect("ws://127.0.0.1:8080");
 
 
 

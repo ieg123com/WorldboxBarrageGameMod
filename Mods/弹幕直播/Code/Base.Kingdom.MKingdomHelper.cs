@@ -182,5 +182,102 @@ namespace BarrageGame
                 return kingdom.id == self.id;
             });
         }
+
+        // 让所有士兵进攻目标国家最近的城市
+        public static void ToAttackKingdom(this MKingdom self,MKingdom targetKingdom)
+        {
+            if(self == targetKingdom)
+            {
+                // 不能自己向自己宣战
+                return;
+            }
+            if(!self.IsEnemy(targetKingdom))
+            {
+                // 不是敌人 开始宣战
+                self.StartWar(targetKingdom);
+            }
+            foreach(var city in self.kingdom.cities)
+            {
+                var _cityTile = Reflection.GetField(city.GetType(),city,"_cityTile") as WorldTile;
+                if (city.army != null && _cityTile != null)
+                {
+                    WorldTile worldTile;
+                    if (city.army.groupLeader != null)
+                    {
+                        worldTile = city.army.groupLeader.currentTile;
+                    }
+                    else
+                    {
+                        worldTile = _cityTile;
+                    }
+                    WorldTile cityTile =  Reflection.GetField(targetKingdom.kingdom.capital.GetType(),targetKingdom.kingdom.capital,"_cityTile") as WorldTile;
+                   // WorldTile cityTile =  targetKingdom.kingdom.capital._cityTile;
+                    foreach (City city2 in  targetKingdom.kingdom.cities)
+                    {
+                        var _city2Tile = Reflection.GetField(city2.GetType(),city2,"_cityTile") as WorldTile;
+                        if (_city2Tile == null || Toolbox.DistVec2(worldTile.pos, _city2Tile.pos) < Toolbox.DistVec2(worldTile.pos, cityTile.pos))
+                        {
+                            cityTile = _city2Tile;
+                        }
+                    }
+                    if (cityTile != null)
+                    {
+                        city.army.moveTo(cityTile);
+                    }
+                }
+            }
+            WorldLog.logNewMessage(self.kingdom, "对", targetKingdom.kingdom, "发起了进攻");
+        }
+        
+        // 回防，召回军队
+        public static bool ToBackArmy(this MKingdom self)
+        {
+            Kingdom kingdom = self.kingdom;
+            WorldLog.logNewMessage(kingdom, "召回了它的军队");
+            foreach (City city in kingdom.cities)
+            {
+                city.army.moveTo(Reflection.GetField(city.GetType(),city,"_cityTile") as WorldTile);
+            }
+            return true;
+        }
+
+        // 显示外交状态
+        public static bool ToShowDiplomacy(this MKingdom self)
+        {
+            Kingdom kingdom = self.kingdom;
+            string text = string.Concat(new string[]
+            {
+                " <color=",
+                Toolbox.colorToHex(GameHelper.KingdomThings.GetKingdomColor(kingdom), true),
+                ">",
+                kingdom.name,
+                "</color> "
+            });
+            if (kingdom.civs_enemies.Count == 0)
+            {
+                text += "处于和平状态";
+            }
+            else
+            {
+                text += "正在跟";
+                Kingdom[] array = new Kingdom[kingdom.civs_enemies.Count];
+                kingdom.civs_enemies.Keys.CopyTo(array, 0);
+                for (int i = 0; i < array.Length; i++)
+                {
+                    string str = string.Concat(new string[]
+                    {
+                        " <color=",
+                        Toolbox.colorToHex(GameHelper.KingdomThings.GetKingdomColor(array[i]), true),
+                        ">",
+                        array[i].name,
+                        "</color> "
+                    });
+                    text += str;
+                }
+                text += "交战。";
+            }
+            MapBox.instance.addNewText(text, Toolbox.color_log_good, null);
+            return true;
+        }
     }
 }

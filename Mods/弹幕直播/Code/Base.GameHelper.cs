@@ -88,7 +88,12 @@ namespace BarrageGame
             {
                 return kingdom.capital.getTile();
             }
+
+
+
         }
+
+
 
         public class MapText
         {
