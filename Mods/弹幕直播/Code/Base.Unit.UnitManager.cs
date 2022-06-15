@@ -9,7 +9,7 @@ namespace BarrageGame
     {
         static public UnitManager instance;
 
-        public Dictionary<int,Unit> allUnit = new Dictionary<int,Unit>();
+        public Dictionary<string,Unit> allUnit = new Dictionary<string,Unit>();
         public UnitManager()
         {
             instance = this;
@@ -19,27 +19,27 @@ namespace BarrageGame
 
         public void Add(Unit  unit)
         {
-            if(allUnit.ContainsKey(unit.instanceId))
+            if(allUnit.ContainsKey(unit.Id))
             {
-                Remove(unit.instanceId);
-                allUnit[unit.instanceId] = unit;
+                Remove(unit.Id);
+                allUnit[unit.Id] = unit;
             }else{
-                allUnit.Add(unit.instanceId,unit);
+                allUnit.Add(unit.Id,unit);
             }
         }
 
-        public void Remove(int instanceId)
+        public void Remove(string id)
         {
-            if(allUnit.ContainsKey(instanceId))
+            if(allUnit.ContainsKey(id))
             {
-                allUnit.Remove(instanceId);
+                allUnit.Remove(id);
             }
         }
 
-        public Unit GetByKey(int instanceId)
+        public Unit GetByKey(string id)
         {
             Unit unit;
-            if(allUnit.TryGetValue(instanceId,out unit))
+            if(allUnit.TryGetValue(id,out unit))
             {
                 return unit;
             }

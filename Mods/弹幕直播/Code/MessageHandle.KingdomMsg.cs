@@ -40,11 +40,11 @@ namespace BarrageGame
                     
                 }
             }
-            //if(player.unitInstanceId != 0)
+            if(player.unitId != null)
             {
                 // 国家协助者
-                Debug.Log($"player.unitInstanceId = {player.unitInstanceId}");
-                var unit = UnitManager.instance.GetByKey(player.unitInstanceId);
+                Debug.Log($"player.unitId = {player.unitId}");
+                var unit = UnitManager.instance.GetByKey(player.unitId);
                 if(unit == null)
                 {
                     return;
@@ -57,13 +57,7 @@ namespace BarrageGame
                 rect.anchoredPosition = GameHelper.MapText.TransformPosition(unit.actor.currentTile.posV3)+ new Vector2(0,10);
                 Debug.Log($"rect.anchoredPosition = {rect.anchoredPosition}");
                 uiBubble.SetMessage(msg.msg);
-
-
             }
-                
-            
-
-
         }
 
         static public void MsgJoin(Player player,MessageDistribute.NormalMsg msg)
@@ -128,7 +122,7 @@ namespace BarrageGame
             if(Main.startWar == false)
             {
                 // 还在保护时间
-                MapBox.instance.addNewText("保护时间，无法宣战！", Toolbox.color_log_good, null);
+                MapBox.instance.addNewText("保护时间，无法宣战！", Toolbox.color_log_warning, null);
                 return;
             }
 
@@ -184,7 +178,7 @@ namespace BarrageGame
                 Debug.Log($"玩家 {player.name} 已经加入国家 {player.kingdomCivId}");
                 return;
             }
-            if(player.unitInstanceId != 0)
+            if(player.unitId != null)
             {
                 Debug.Log($"玩家 {player.name} 已经协助国家 {player.kingdomCivId}");
                 return;
@@ -208,7 +202,7 @@ namespace BarrageGame
             }
             var unit = UnitFactory.Create(tile,"humans");
             player.kingdomCivId = mKingdom.id;
-            player.unitInstanceId = unit.instanceId;
+            player.unitId = unit.Id;
             unit.ownerPlayerUid = player.uid;
             unit.actor.CallMethod("setKingdom",mKingdom.kingdom);
             unit.actor.setStatsDirty();
@@ -227,9 +221,44 @@ namespace BarrageGame
                 Debug.Log($"玩家 {player.name} 还没加入国家");
                 return;
             }
-            if(player.isKingPlayer == false)
+            var comm = msg.msg.Split(' ');
+            if(comm.Length < 2)
             {
-                Debug.Log($"玩家 {player.name} 没有控制权 {player.kingdomCivId}");
+                // 命令错误
+                return;
+            }
+            var mKingdom = MKingdomManager.instance.GetByKey($"k_{comm[1]}");
+            var PeaceInitiator = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+            if(Main.startWar == false)
+            {
+                // 还在保护时间
+                MapBox.instance.addNewText("保护时间，无法进攻！", Toolbox.color_log_warning, null);
+                return;
+            }
+            if(mKingdom == null || PeaceInitiator == null)
+            {
+                return;
+            }
+
+            if(player.isKingPlayer == true)
+            {
+                // 拥有国家控制权
+                PeaceInitiator.ToAttackKingdom(mKingdom);
+            }else if(player.unitId != null){
+                // 协助这个国家的玩家
+                var unit = UnitManager.instance.GetByKey(player.unitId);
+                if(unit != null)
+                {
+                    unit.ToAttackKingdom(mKingdom);
+                }
+            }
+        }
+
+        static public void MsgMoveToKingdom(Player player,MessageDistribute.NormalMsg msg)
+        {
+            if(player.kingdomCivId == null || player.kingdomCivId == "")
+            {
+                Debug.Log($"玩家 {player.name} 还没加入国家");
                 return;
             }
             var comm = msg.msg.Split(' ');
@@ -244,47 +273,55 @@ namespace BarrageGame
             {
                 return;
             }
-            if(Main.startWar == false)
-            {
-                // 还在保护时间
-                MapBox.instance.addNewText("保护时间，无法进攻！", Toolbox.color_log_good, null);
-                return;
-            }
 
-            PeaceInitiator.ToAttackKingdom(mKingdom);
+            if(player.isKingPlayer == true)
+            {
+                // 拥有国家控制权
+                PeaceInitiator.MoveToKingdom(mKingdom);
+            }else if(player.unitId != null){
+                // 协助这个国家的玩家
+                var unit = UnitManager.instance.GetByKey(player.unitId);
+                if(unit != null)
+                {
+                    unit.MoveToKingdom(mKingdom);
+                }
+            }
         }
 
-        static public void ToBackArmy(Player player,MessageDistribute.NormalMsg msg)
+        static public void MsgToBackArmy(Player player,MessageDistribute.NormalMsg msg)
         {
             if(player.kingdomCivId == null || player.kingdomCivId == "")
             {
                 Debug.Log($"玩家 {player.name} 还没加入国家");
                 return;
             }
-            if(player.isKingPlayer == false)
-            {
-                Debug.Log($"玩家 {player.name} 没有控制权 {player.kingdomCivId}");
-                return;
-            }
-
             var PeaceInitiator = MKingdomManager.instance.GetByKey(player.kingdomCivId);
             if(PeaceInitiator == null)
             {
                 return;
             }
-            PeaceInitiator.ToBackArmy();
+
+
+            if(player.isKingPlayer == true)
+            {
+                // 可以控制这个国家
+                PeaceInitiator.ToBackArmy();
+                return;
+            }else if(player.unitId != null){
+                // 协助这个国家的玩家
+                var unit = UnitManager.instance.GetByKey(player.unitId);
+                if(unit != null)
+                {
+                    unit.ToBack();
+                }
+            }
         }
 
-        static public void ToShowDiplomacy(Player player,MessageDistribute.NormalMsg msg)
+        static public void MsgToShowDiplomacy(Player player,MessageDistribute.NormalMsg msg)
         {
             if(player.kingdomCivId == null || player.kingdomCivId == "")
             {
                 Debug.Log($"玩家 {player.name} 还没加入国家");
-                return;
-            }
-            if(player.isKingPlayer == false)
-            {
-                Debug.Log($"玩家 {player.name} 没有控制权 {player.kingdomCivId}");
                 return;
             }
 
@@ -295,6 +332,8 @@ namespace BarrageGame
             }
             PeaceInitiator.ToShowDiplomacy();
         }
+
+
     }
 
 

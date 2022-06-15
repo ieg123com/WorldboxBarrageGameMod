@@ -69,44 +69,44 @@ namespace BarrageGame
 
         static public void KillHimself(Actor pActor,bool pDestroy, AttackType pType, bool pCountDeath, bool pLaunchCallbacks)
         {
-            var unit = UnitManager.instance.GetByKey(pActor.GetInstanceID());
+            var unit = UnitManager.instance.GetByKey(pActor.GetID());
             if(unit == null)
             {
                 return;
             }
-            Debug.Log($"KillHimself id = {pActor.GetInstanceID().ToString()}, pAttackType = {pType.ToString()}");
+            Debug.Log($"KillHimself id = {pActor.GetID()}, pAttackType = {pType.ToString()}");
             if(unit.ownerPlayerUid != 0)
             {
                 var player= PlayerManager.instance.GetByKey(unit.ownerPlayerUid);
                 if(player != null)
                 {
                     player.kingdomCivId = "";
-                    player.unitInstanceId = 0;
+                    player.unitId = null;
                 }
                 unit.ownerPlayerUid = 0;
             }
-            UnitManager.instance.Remove(unit.instanceId);
+            UnitManager.instance.Remove(unit.Id);
         }
 
         static public void DestroyActor(Actor pActor)
         {
-            var unit = UnitManager.instance.GetByKey(pActor.GetInstanceID());
+            var unit = UnitManager.instance.GetByKey(pActor.GetID());
             if(unit == null)
             {
                 return;
             }
-            Debug.Log($"DestroyActor id = {pActor.GetInstanceID().ToString()}");
+            Debug.Log($"DestroyActor id = {pActor.GetID()}");
             if(unit.ownerPlayerUid != 0)
             {
                 var player= PlayerManager.instance.GetByKey(unit.ownerPlayerUid);
                 if(player != null)
                 {
                     player.kingdomCivId = "";
-                    player.unitInstanceId = 0;
+                    player.unitId = null;
                 }
                 unit.ownerPlayerUid = 0;
             }
-            UnitManager.instance.Remove(unit.instanceId);
+            UnitManager.instance.Remove(unit.Id);
         }
         static public void CheckNewKingdom()
         {
@@ -183,6 +183,7 @@ namespace BarrageGame
             });
         }
 
+
         // 让所有士兵进攻目标国家最近的城市
         public static void ToAttackKingdom(this MKingdom self,MKingdom targetKingdom)
         {
@@ -229,6 +230,16 @@ namespace BarrageGame
             WorldLog.logNewMessage(self.kingdom, "对", targetKingdom.kingdom, "发起了进攻");
         }
         
+        public static void MoveToKingdom(this MKingdom self,MKingdom targetKingdom)
+        {
+            foreach(var city in self.kingdom.cities)
+            {
+                WorldTile cityTile =  Reflection.GetField(targetKingdom.kingdom.capital.GetType(),targetKingdom.kingdom.capital,"_cityTile") as WorldTile;
+                city.army.moveTo(cityTile);
+            }
+        }
+
+
         // 回防，召回军队
         public static bool ToBackArmy(this MKingdom self)
         {

@@ -34,6 +34,8 @@ namespace BarrageGame
 
             DebugConfig.setOption(DebugOption.ShowAmountNearArmy,true);
             DebugConfig.setOption(DebugOption.ShowWarriorsCityText,true);
+            DebugConfig.setOption(DebugOption.CityFastConstruction,true);
+            DebugConfig.setOption(DebugOption.CityFastUpgrades,true);
 
             Main.startGame = true;
             Main.startWar = false;

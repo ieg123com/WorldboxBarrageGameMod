@@ -13,7 +13,7 @@ namespace BarrageGame
     {
         // 圆形通道
         static public Texture2D RoundChannel;
-        public int instanceId;
+        public string Id;
         public long ownerPlayerUid = 0;
         public Sprite head;
         public Actor actor;
