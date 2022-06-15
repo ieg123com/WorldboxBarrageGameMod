@@ -36,6 +36,8 @@ namespace BarrageGame
             DebugConfig.setOption(DebugOption.ShowWarriorsCityText,true);
 
             Main.startGame = true;
+            Main.startWar = false;
+
 
             GameHelper.ResetCamera();
             //GameObjects.FindEvenInactive("BottomElements").SetActive(false);

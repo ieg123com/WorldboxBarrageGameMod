@@ -44,8 +44,7 @@ namespace BarrageGame
         /// </summary>
         public event EventHandler OnClose;
 
-        public Queue<Action> actions = new Queue<Action>();
-
+        
         public WSocketClientHelp(string wsUrl)
         {
             uri = new Uri(wsUrl);
@@ -69,11 +68,11 @@ namespace BarrageGame
                     isUserClose = false;
                     ws = new ClientWebSocket();
                     await ws.ConnectAsync(uri, CancellationToken.None);
-                    actions.Enqueue(() =>{
+                    Main.actions.Enqueue(() =>{
                         Debug.Log("连接成功");
                     });
                     if (OnOpen != null)
-                        actions.Enqueue(() =>
+                        Main.actions.Enqueue(() =>
                         {
                             OnOpen(ws, new EventArgs());
                         });
@@ -100,7 +99,7 @@ namespace BarrageGame
                                 string userMsg = Encoding.UTF8.GetString(bs.ToArray(), 0, bs.Count);
 
                                 if (OnMessage != null)
-                                    actions.Enqueue(() =>
+                                    Main.actions.Enqueue(() =>
                                     {
                                         OnMessage(ws, userMsg);
                                     });
@@ -131,10 +130,14 @@ namespace BarrageGame
                 {
                     if (!isUserClose)
                         Close(ws.CloseStatus.Value, ws.CloseStatusDescription + netErr);
+
+
                 }
-                actions.Enqueue(() =>{
-                    Debug.Log("WebSocket Over...");
+
+                Main.actions.Enqueue(() =>{
+                    Debug.Log($"WebSocket Over... {isUserClose}");
                 });
+                
             });
 
         }
@@ -206,13 +209,13 @@ namespace BarrageGame
                 ws.Abort();
                 ws.Dispose();
 
-                actions.Enqueue(() =>{
+                Main.actions.Enqueue(() =>{
                     Debug.Log($"连接断开 1{statusDescription}");
                 });
 
                 
                 if (OnClose != null)
-                    actions.Enqueue(() =>
+                    Main.actions.Enqueue(() =>
                     {
                         OnClose(ws, new EventArgs());
                     });
@@ -221,11 +224,7 @@ namespace BarrageGame
         }
         public void Update()
         {
-            while(actions.Count > 0)
-            {
-                var action = actions.Dequeue();
-                action();
-            }
+
         }
 
     }

@@ -125,6 +125,12 @@ namespace BarrageGame
             {
                 return;
             }
+            if(Main.startWar == false)
+            {
+                // 还在保护时间
+                MapBox.instance.addNewText("保护时间，无法宣战！", Toolbox.color_log_good, null);
+                return;
+            }
 
             Debug.Log($"玩家 {player.name} {WarInitiator.id} 宣战 {mKingdom.id}");
             WarInitiator.StartWar(mKingdom);
@@ -236,6 +242,12 @@ namespace BarrageGame
             var PeaceInitiator = MKingdomManager.instance.GetByKey(player.kingdomCivId);
             if(mKingdom == null || PeaceInitiator == null)
             {
+                return;
+            }
+            if(Main.startWar == false)
+            {
+                // 还在保护时间
+                MapBox.instance.addNewText("保护时间，无法进攻！", Toolbox.color_log_good, null);
                 return;
             }
 

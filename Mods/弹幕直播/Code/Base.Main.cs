@@ -23,6 +23,8 @@ namespace BarrageGame{
         static public Main instance;
 
         static public bool startGame = false;
+        // 可以宣战
+        static public bool startWar = false;
 
         public MessageDistribute messageDistribute;
         public PlayerManager playerManager;
@@ -30,7 +32,7 @@ namespace BarrageGame{
         public MKingdomManager mKingdomManager;
         public UnitManager unitManager;
 
-        public WebSocketToCCWSS DanmakuMessage;
+        public WebSocketToSelf DanmakuMessage;
 
         public LoadStatus loadStatus;
 
@@ -82,8 +84,8 @@ namespace BarrageGame{
 
             Debug.Log("Test Over");
 
-            DanmakuMessage = new WebSocketToCCWSS();
-            DanmakuMessage.Connect("ws://127.0.0.1:8080");
+            DanmakuMessage = new WebSocketToSelf();
+            DanmakuMessage.Connect("ws://127.0.0.1:8088");
 
 
 

@@ -82,6 +82,9 @@ namespace BarrageGame
                     {
                         stageType = StageType.C;
                         GameHelper.SetTimeScale(4f);
+                        // 可以宣战了
+                        Main.startWar = true;
+                        MapBox.instance.addNewText("可以相互宣战了", Toolbox.color_log_good, null);
                     }
                     break;
                 }
