@@ -29,6 +29,7 @@ namespace BarrageGame
             PlayerManager.instance.Clear();
             MKingdomManager.instance.Clear();
             UnitManager.instance.Clear();
+            UIKingdomList.instance.Clear();
 
             MKingdomHelper.Init();
 
@@ -64,7 +65,7 @@ namespace BarrageGame
             PlayerManager.instance.Clear();
             MKingdomManager.instance.Clear();
 
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,8));
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,18));
         }
 
 

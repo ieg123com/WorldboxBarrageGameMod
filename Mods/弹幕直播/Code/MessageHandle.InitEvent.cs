@@ -17,6 +17,7 @@ namespace BarrageGame
             MessageDistribute.instance.BindNormalMsgEvent("进攻",KingdomMsg.MsgToAttack);
             MessageDistribute.instance.BindNormalMsgEvent("前往",KingdomMsg.MsgMoveToKingdom);
             MessageDistribute.instance.BindNormalMsgEvent("回防",KingdomMsg.MsgToBackArmy);
+            MessageDistribute.instance.BindNormalMsgEvent("投降",KingdomMsg.MsgSurrender);
             MessageDistribute.instance.BindNormalMsgEvent("查看外交",KingdomMsg.MsgToShowDiplomacy);
         }
     }

@@ -81,7 +81,7 @@ namespace BarrageGame
                     if(MapBox.instance.mapStats.year >= 200)
                     {
                         stageType = StageType.C;
-                        GameHelper.SetTimeScale(4f);
+                        GameHelper.SetTimeScale(5f);
                         // 可以宣战了
                         Main.startWar = true;
                         MapBox.instance.addNewText("可以相互宣战了", Toolbox.color_log_good, null);
@@ -114,6 +114,15 @@ namespace BarrageGame
 
             if(stageType == StageType.C)
             {
+                // 时间流速会慢慢变快
+                int diffYear = MapBox.instance.mapStats.year - 200;
+                if(diffYear<0)
+                {
+                    diffYear =0;
+                }
+                diffYear = (diffYear > 100)?100:diffYear;
+                GameHelper.SetTimeScale(5f + 5f * (diffYear / 100f));
+                return;
                 if(MKingdomManager.instance.allKingdoms.Count > 2){
                     // 简易ai
                     {
@@ -151,6 +160,19 @@ namespace BarrageGame
         void OnCompeleted()
         {
             // 任务完成
+            // TODO 记录谁赢了
+            if(MKingdomManager.instance.allKingdoms.Count == 1)
+            {
+                var mKingdom = MKingdomManager.instance.allKingdoms.ElementAt(0).Value;
+                var winedPlayer = PlayerManager.instance.GetByKey(mKingdom.kingPlayerUid);
+                if(winedPlayer != null)
+                {
+                    winedPlayer.playerDataInfo.kingdomDataInfo.winNum += 1;
+                    winedPlayer.dataChanged = true;
+                }
+            }
+
+
             Destroy(gameObject);
             ControlHelper.GameOver();
         }

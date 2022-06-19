@@ -29,7 +29,7 @@ namespace BarrageGame
             var rect = image.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(0.5f, 0.5f);
             rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.sizeDelta = new Vector2(0f, 0f);
+            rect.sizeDelta = new Vector2(0f, 50f);
             rect.anchoredPosition = new Vector2(0f, 0f);
             rect.pivot = new Vector2(0.5f, 0f);
             //rect.localScale = new Vector3(1f,1f, 1f);

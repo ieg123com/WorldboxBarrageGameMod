@@ -29,6 +29,7 @@ namespace BarrageGame
             //ModEvent.makeNewCivKingdom = MakeNewCivKingdom;
             ModEvent.destroyActor = new Action<Actor>(DestroyActor);
             ModEvent.killHimself = new Action<Actor, bool, AttackType, bool, bool>(KillHimself);
+            ModEvent.capitalChange = new Action<Kingdom,City,City>(CapitalChange);
         }
 
 
@@ -40,15 +41,52 @@ namespace BarrageGame
                 return;
             }
             Debug.Log($"灭亡一个国家 [{kingdom.id}]{kingdom.name}");
+            MKingdom kingdomKiller = null;
+            if(mKingdom.capital != null)
+            {
+                var last_kingdom = Reflection.GetField(mKingdom.capital.GetType(),mKingdom.capital,"kingdom") as Kingdom;
+                if(last_kingdom != null)
+                {
+                    kingdomKiller = MKingdomManager.instance.GetByKey(last_kingdom.id);
+                }
+            }else{
+                Debug.Log($"国家首都没有 [{kingdom.id}]{kingdom.name}");
+            }
+            
+
+            mKingdom.capital = null;
             mKingdom.alive = false;
             UnityEngine.Object.Destroy(mKingdom.gameObject);
             MKingdomManager.instance.Remove(kingdom.id);
-            // 复活玩家
+            {
+                // TODO 计分
+                if(kingdomKiller != null)
+                {
+                    Debug.Log($"死于 [{kingdomKiller.kingdom.id}]{kingdomKiller.kingdom.name}");
+                    var playerKiller = PlayerManager.instance.GetByKey(kingdomKiller.kingPlayerUid); // 凶手
+                    if(playerKiller != null)
+                    {
+                        playerKiller.playerDataInfo.kingdomDataInfo.killNum += 1;
+                        playerKiller.dataChanged = true;
+                        playerKiller.ReflectionUIKingdom();
+                    }
+                }
+            }
+
+            
             var player = PlayerManager.instance.GetByKey(mKingdom.kingPlayerUid);
             if(player == null)
             {
                 return;
             }
+
+            {
+                // TODO 计分
+                player.playerDataInfo.kingdomDataInfo.deathNum += 1;
+                player.dataChanged = true;
+                player.ReflectionUIKingdom();
+            }
+
             player.kingdomCivId = "";
             player.isKingPlayer = false;
 
@@ -60,6 +98,17 @@ namespace BarrageGame
             Debug.Log($"建立新国家 [{id}]{kingdom.name}");
             var mkingbom = MKingdomFactory.Create(kingdom);
             MKingdomManager.instance.Add(mkingbom);
+        }
+        // 国家首都变动
+        static public void CapitalChange(Kingdom kingdom,City newCity,City oldCity)
+        {
+            var mKingdom = MKingdomManager.instance.GetByKey(kingdom.id);
+            if(mKingdom == null)
+            {
+                return;
+            }
+            Debug.Log($"国家首都变动 {kingdom.id}");
+            mKingdom.capital = newCity;
         }
 
         static public void RemoveCitizen(Actor pActor, bool pKilled, AttackType pAttackType)
@@ -177,9 +226,10 @@ namespace BarrageGame
                 {
                     // 未知原因
                     Debug.Log($"[error] list.Count = {list.Count} in GetMapText");
+                    return false;
+                }else{
+                    return kingdom.id == self.id;
                 }
-
-                return kingdom.id == self.id;
             });
         }
 
@@ -289,6 +339,21 @@ namespace BarrageGame
             }
             MapBox.instance.addNewText(text, Toolbox.color_log_good, null);
             return true;
+        }
+
+        // 向pkingdom投降
+        public static void ToSurrender(this MKingdom self,MKingdom pKingdom)
+        {
+            List<City> list = new List<City>();
+            foreach (City item in self.kingdom.cities)
+            {
+                list.Add(item);
+            }
+            foreach (City city in list)
+            {
+                city.joinAnotherKingdom(pKingdom.kingdom);
+            }
+            list.Clear();
         }
     }
 }

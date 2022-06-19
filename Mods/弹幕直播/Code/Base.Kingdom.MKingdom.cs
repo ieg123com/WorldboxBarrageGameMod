@@ -15,6 +15,8 @@ namespace BarrageGame
         public long kingPlayerUid = 0;
 
         public Kingdom kingdom = null;
+        // 首都
+        public City capital = null;
 
         public HashSet<string> peaceList = new HashSet<string>();
 

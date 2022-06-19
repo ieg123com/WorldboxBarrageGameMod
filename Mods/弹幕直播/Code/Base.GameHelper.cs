@@ -11,6 +11,9 @@ namespace BarrageGame
 
     public class GameHelper
     {
+
+
+        
         // 重置Camera
         static public void ResetCamera()
         {

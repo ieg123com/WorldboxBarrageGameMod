@@ -93,6 +93,9 @@ namespace BarrageGame
             mKingdom.SetName(player.name);
             mKingdom.SetHeadSprite(player.headSprite);
 
+            player.uIKingdom = UIKingdomList.instance.GetUIKingdom();
+            player.ReflectionUIKingdom();
+
         }
 
         static public void MsgSplite(Player player,MessageDistribute.NormalMsg msg)
@@ -315,6 +318,33 @@ namespace BarrageGame
                     unit.ToBack();
                 }
             }
+        }
+
+        static public void MsgSurrender(Player player,MessageDistribute.NormalMsg msg)
+        {
+            if(player.kingdomCivId == null || player.kingdomCivId == "")
+            {
+                Debug.Log($"玩家 {player.name} 还没加入国家");
+                return;
+            }
+            var comm = msg.msg.Split(' ');
+            if(comm.Length < 2)
+            {
+                // 命令错误
+                return;
+            }
+            var targetMKingdom = MKingdomManager.instance.GetByKey($"k_{comm[1]}");
+            var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+            if(mKingdom == null || targetMKingdom == null)
+            {
+                return;
+            }
+            if(MKingdomManager.instance.allKingdoms.Count == 2)
+            {
+                // 只有2人的时候可以投降
+                mKingdom.ToSurrender(targetMKingdom);
+            }
+
         }
 
         static public void MsgToShowDiplomacy(Player player,MessageDistribute.NormalMsg msg)

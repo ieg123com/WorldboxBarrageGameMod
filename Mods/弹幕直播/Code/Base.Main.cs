@@ -32,7 +32,7 @@ namespace BarrageGame{
         public MKingdomManager mKingdomManager;
         public UnitManager unitManager;
 
-        public WebSocketToCCWSS DanmakuMessage = new WebSocketToCCWSS();
+        public WebSocketToSelf DanmakuMessage = new WebSocketToSelf();
 
         public LoadStatus loadStatus;
 
@@ -84,12 +84,13 @@ namespace BarrageGame{
 
             Debug.Log("Test Over");
 
-            DanmakuMessage.Connect("ws://127.0.0.1:8080");
+            DanmakuMessage.Connect("ws://127.0.0.1:8088");
 
 
 
             MKingdomHelper.InitEvent();
             MessageHandle.InitEvent();
+
 
 
             Debug.Log($"SaveManager.generateMainPath(\"saves\") {SaveManager.generateMainPath("saves")}");
@@ -113,7 +114,9 @@ namespace BarrageGame{
 
         void Start()
         {
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,8));
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,18));
+            MapNamesManager.instance.gameObject.AddComponent<UIKingdomList>().RefreshDisplay();
+
         }
 
         public float tempTime = 0f;
@@ -165,12 +168,20 @@ namespace BarrageGame{
 
         static void SpawnTest()
         {
+            
+
+            return;
             var worldTile = MapBox.instance.GetTile(UnityEngine.Random.Range(0,MapBox.width),UnityEngine.Random.Range(0,MapBox.height));
             var unit = UnitFactory.Create(worldTile,"humans");
             unit.head = Sprites.LoadSprite($"{Mod.Info.Path}/GameResources/head.png");
             unit.Apply();
 
-
+            if(worldTile.Type.layerType == TileLayerType.Ground)
+            {
+                MapBox.instance.buildNewCity(worldTile.zone);
+                Debug.Log("建国");
+            }
+            Debug.Log($"worldTile.Type.layerType = {worldTile.Type.layerType}");
 
 
             return;
