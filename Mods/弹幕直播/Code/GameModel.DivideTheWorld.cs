@@ -43,7 +43,8 @@ namespace BarrageGame
         void Start()
         {
             stageType = StageType.A;
-            GameHelper.Paused(true);
+            GameHelper.SetTimeScale(0.1f);
+            //GameHelper.Paused(true);
         }
 
         void Update()
@@ -68,7 +69,7 @@ namespace BarrageGame
                 case StageType.A:
                 {
                     aTimer += 1f;
-                    if(aTimer >= 30f)
+                    if(aTimer >= 60f)
                     {
                         stageType = StageType.B;
                         GameHelper.Paused(false);
@@ -78,7 +79,7 @@ namespace BarrageGame
                 }
                 case StageType.B:
                 {
-                    if(MapBox.instance.mapStats.year >= 200)
+                    if(MapBox.instance.mapStats.year >= 150)
                     {
                         stageType = StageType.C;
                         GameHelper.SetTimeScale(5f);

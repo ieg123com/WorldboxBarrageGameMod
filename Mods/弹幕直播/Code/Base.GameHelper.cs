@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using NCMS;
@@ -93,7 +94,68 @@ namespace BarrageGame
                 return kingdom.capital.getTile();
             }
 
-
+            // 随机建国
+            public static Kingdom RandomCreate()
+            {
+                var zoneCalculator = Reflection.GetField(MapBox.instance.GetType(), MapBox.instance, "zoneCalculator") as ZoneCalculator;
+                if(zoneCalculator == null)
+                {
+                    return null;
+                }
+                City city = null;
+                List<TileZone> gooldZones = new List<TileZone>();
+                for(int i = 0;i<zoneCalculator.zones.Count;++i)
+                {
+                    if(zoneCalculator.zones[i].goodForNewCity == true)
+                    {
+                        gooldZones.Add(zoneCalculator.zones[i]);
+                        if(gooldZones.Count > 10)
+                        {
+                            break;
+                        }
+                    }
+                }
+                if(gooldZones.Count == 0)
+                {
+                    return null;
+                }
+                {
+                    var pTile = gooldZones[UnityEngine.Random.Range(0,gooldZones.Count)].centerTile;
+                    var race = AssetManager.raceLibrary.get("human");
+                    city = MapBox.instance.buildNewCity(pTile.zone,null,race,false,null);
+                    if(city != null)
+                    {
+                        city.newCityEvent();
+                        var actor = GameHelper.spawnUnit(pTile,"humans");
+                        actor.CallMethod("becomeCitizen",city);
+                    }
+                }
+                if(city == null)
+                {
+                    for(int i = 0;i<zoneCalculator.zones.Count;++i)
+                    {
+                        if(zoneCalculator.zones[i].goodForNewCity == true)
+                        {
+                            var pTile = zoneCalculator.zones[i].centerTile;
+                            var race = AssetManager.raceLibrary.get("human");
+                            city = MapBox.instance.buildNewCity(pTile.zone,null,race,false,null);
+                            if(city == null)
+                            {
+                                continue;
+                            }
+                            city.newCityEvent();
+                            var actor = GameHelper.spawnUnit(pTile,"humans");
+                            actor.CallMethod("becomeCitizen",city);
+                            break;
+                        }
+                    }
+                }
+                if(city == null)
+                {
+                    return null;
+                }
+                return Reflection.GetField(city.GetType(), city, "kingdom") as Kingdom;
+            }
 
         }
 

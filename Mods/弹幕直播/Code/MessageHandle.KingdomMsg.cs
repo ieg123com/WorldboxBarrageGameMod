@@ -68,13 +68,27 @@ namespace BarrageGame
                 Debug.Log($"玩家 {player.name} 已经加入国家 {player.kingdomCivId}");
                 return;
             }
+            /*
             var comm = msg.msg.Split(' ');
             if(comm.Length < 2)
             {
                 // 命令错误
                 return;
             }
-            var mKingdom = MKingdomManager.instance.GetByKey($"k_{comm[1]}");
+            */
+            {
+                // 建国
+
+            }
+            var kingdom = GameHelper.KingdomThings.RandomCreate();
+            if(kingdom == null)
+            {
+                MapBox.instance.addNewText("国家已满，无法加入!", Toolbox.color_log_warning, null);
+                return;
+            }
+
+
+            var mKingdom = MKingdomManager.instance.GetByKey(kingdom.id);
             if(mKingdom == null)
             {
                 // 国家不存在

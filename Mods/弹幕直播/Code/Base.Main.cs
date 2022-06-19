@@ -32,7 +32,7 @@ namespace BarrageGame{
         public MKingdomManager mKingdomManager;
         public UnitManager unitManager;
 
-        public WebSocketToSelf DanmakuMessage = new WebSocketToSelf();
+        public WebSocketToCCWSS DanmakuMessage = new WebSocketToCCWSS();
 
         public LoadStatus loadStatus;
 
@@ -84,7 +84,7 @@ namespace BarrageGame{
 
             Debug.Log("Test Over");
 
-            DanmakuMessage.Connect("ws://127.0.0.1:8088");
+            DanmakuMessage.Connect("ws://127.0.0.1:8080");
 
 
 
@@ -170,18 +170,48 @@ namespace BarrageGame{
         {
             
 
+            GameHelper.KingdomThings.RandomCreate();
             return;
-            var worldTile = MapBox.instance.GetTile(UnityEngine.Random.Range(0,MapBox.width),UnityEngine.Random.Range(0,MapBox.height));
-            var unit = UnitFactory.Create(worldTile,"humans");
-            unit.head = Sprites.LoadSprite($"{Mod.Info.Path}/GameResources/head.png");
-            unit.Apply();
+     
+            //var worldTile = MapBox.instance.GetTile(UnityEngine.Random.Range(0,MapBox.width),UnityEngine.Random.Range(0,MapBox.height));
+            
+            var zoneCalculator = Reflection.GetField(MapBox.instance.GetType(), MapBox.instance, "zoneCalculator") as ZoneCalculator;
+            Debug.Log($"zones.Count = {zoneCalculator.zones.Count}");
 
-            if(worldTile.Type.layerType == TileLayerType.Ground)
+            int cityCount= 0;
+
+            for(int i = 0;i<zoneCalculator.zones.Count;++i)
             {
-                MapBox.instance.buildNewCity(worldTile.zone);
-                Debug.Log("建国");
+                if(zoneCalculator.zones[i].goodForNewCity == true)
+                {
+                    cityCount += 1;
+                    
+                    var worldTile = zoneCalculator.zones[i].centerTile;
+                    var unit = UnitFactory.Create(worldTile,"humans");
+                    unit.head = Sprites.LoadSprite($"{Mod.Info.Path}/GameResources/head.png");
+                    unit.Apply();
+                    foreach(var v in AssetManager.raceLibrary.dict.Keys)
+                    {
+                        Debug.Log($"race = {v}");
+                    }
+
+
+
+
+                    var race = AssetManager.raceLibrary.get("human");
+                    var city = MapBox.instance.buildNewCity(worldTile.zone,null,race,false,null);
+                    //var kingdom = Reflection.GetField(city.GetType(), city, "kingdom") as Kingdom;
+                    city.newCityEvent();
+                    unit.actor.CallMethod("becomeCitizen",city);
+                    
+                    Debug.Log("建国");
+                    
+                    break;
+                }
             }
-            Debug.Log($"worldTile.Type.layerType = {worldTile.Type.layerType}");
+            Debug.Log($"cityCount = {cityCount}");
+            
+            //Debug.Log($"worldTile.Type.layerType = {worldTile.Type.layerType}");
 
 
             return;
