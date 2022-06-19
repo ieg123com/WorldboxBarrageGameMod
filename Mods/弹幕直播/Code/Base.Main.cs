@@ -32,7 +32,7 @@ namespace BarrageGame{
         public MKingdomManager mKingdomManager;
         public UnitManager unitManager;
 
-        public WebSocketToCCWSS DanmakuMessage = new WebSocketToCCWSS();
+        public WebSocketToSelf DanmakuMessage = new WebSocketToSelf();
 
         public LoadStatus loadStatus;
 
@@ -84,7 +84,7 @@ namespace BarrageGame{
 
             Debug.Log("Test Over");
 
-            DanmakuMessage.Connect("ws://127.0.0.1:8080");
+            DanmakuMessage.Connect("ws://127.0.0.1:8088");
 
 
 
@@ -114,7 +114,7 @@ namespace BarrageGame{
 
         void Start()
         {
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,18));
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,20));
             MapNamesManager.instance.gameObject.AddComponent<UIKingdomList>().RefreshDisplay();
 
         }

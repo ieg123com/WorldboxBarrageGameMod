@@ -116,7 +116,7 @@ namespace BarrageGame
             if(stageType == StageType.C)
             {
                 // 时间流速会慢慢变快
-                int diffYear = MapBox.instance.mapStats.year - 200;
+                int diffYear = MapBox.instance.mapStats.year - 150;
                 if(diffYear<0)
                 {
                     diffYear =0;
