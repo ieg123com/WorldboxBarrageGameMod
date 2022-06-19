@@ -75,12 +75,23 @@ namespace BarrageGame
                 // 命令错误
                 return;
             }
+            
             */
+            int allPopulationTotal = 0;
+            int avPopulationTotal = 0;
             {
-                // 建国
-
+                // TODO 获取平均人口
+                if(MKingdomManager.instance.allKingdoms.Count > 0)
+                {
+                    foreach(var v in MKingdomManager.instance.allKingdoms.Values)
+                    {
+                        allPopulationTotal += v.kingdom.getPopulationTotal();
+                    }
+                    avPopulationTotal = allPopulationTotal / MKingdomManager.instance.allKingdoms.Count;
+                }
             }
-            var kingdom = GameHelper.KingdomThings.RandomCreate();
+            // TODO 创建国家，并追平其他国家人口
+            var kingdom = GameHelper.KingdomThings.RandomCreate(avPopulationTotal);
             if(kingdom == null)
             {
                 MapBox.instance.addNewText("国家已满，无法加入!", Toolbox.color_log_warning, null);

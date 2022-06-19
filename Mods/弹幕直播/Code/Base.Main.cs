@@ -33,6 +33,7 @@ namespace BarrageGame{
         public UnitManager unitManager;
 
         public WebSocketToSelf DanmakuMessage = new WebSocketToSelf();
+        //public WebSocketToCCWSS DanmakuMessage = new WebSocketToCCWSS();
 
         public LoadStatus loadStatus;
 

@@ -44,7 +44,7 @@ namespace BarrageGame
             Config.timeScale = scale;
         }
 
-        static public Actor spawnUnit(WorldTile pTile, string pPowerID)
+        static public Actor spawnUnit(WorldTile pTile, string pPowerID,bool showSpawnEffect = true)
         {
             GodPower godPower = AssetManager.powers.get(pPowerID);
             Sfx.play("spawn", true, -1f, -1f);
@@ -60,7 +60,7 @@ namespace BarrageGame
                     AchievementLibrary.achievementSacrifice.check(null, null, null);
                 }
             }
-            if (godPower.showSpawnEffect != string.Empty)
+            if (showSpawnEffect == true)
             {
                 MapBox.instance.stackEffects.CallMethod("startSpawnEffect",pTile, godPower.showSpawnEffect);
             }
@@ -95,7 +95,7 @@ namespace BarrageGame
             }
 
             // 随机建国
-            public static Kingdom RandomCreate()
+            public static Kingdom RandomCreate(int actorNumber = 1)
             {
                 var zoneCalculator = Reflection.GetField(MapBox.instance.GetType(), MapBox.instance, "zoneCalculator") as ZoneCalculator;
                 if(zoneCalculator == null)
@@ -103,13 +103,14 @@ namespace BarrageGame
                     return null;
                 }
                 City city = null;
+                WorldTile pTile = null;
                 List<TileZone> gooldZones = new List<TileZone>();
                 for(int i = 0;i<zoneCalculator.zones.Count;++i)
                 {
                     if(zoneCalculator.zones[i].goodForNewCity == true)
                     {
                         gooldZones.Add(zoneCalculator.zones[i]);
-                        if(gooldZones.Count > 10)
+                        if(gooldZones.Count > 20)
                         {
                             break;
                         }
@@ -120,14 +121,12 @@ namespace BarrageGame
                     return null;
                 }
                 {
-                    var pTile = gooldZones[UnityEngine.Random.Range(0,gooldZones.Count)].centerTile;
+                    pTile = gooldZones[UnityEngine.Random.Range(0,gooldZones.Count)].centerTile;
                     var race = AssetManager.raceLibrary.get("human");
                     city = MapBox.instance.buildNewCity(pTile.zone,null,race,false,null);
                     if(city != null)
                     {
                         city.newCityEvent();
-                        var actor = GameHelper.spawnUnit(pTile,"humans");
-                        actor.CallMethod("becomeCitizen",city);
                     }
                 }
                 if(city == null)
@@ -136,7 +135,7 @@ namespace BarrageGame
                     {
                         if(zoneCalculator.zones[i].goodForNewCity == true)
                         {
-                            var pTile = zoneCalculator.zones[i].centerTile;
+                            pTile = zoneCalculator.zones[i].centerTile;
                             var race = AssetManager.raceLibrary.get("human");
                             city = MapBox.instance.buildNewCity(pTile.zone,null,race,false,null);
                             if(city == null)
@@ -144,14 +143,20 @@ namespace BarrageGame
                                 continue;
                             }
                             city.newCityEvent();
-                            var actor = GameHelper.spawnUnit(pTile,"humans");
-                            actor.CallMethod("becomeCitizen",city);
                             break;
                         }
                     }
                 }
-                if(city == null)
+                if(city != null)
                 {
+                    actorNumber = (actorNumber < 1)?1:actorNumber;
+                    for(int i = 0;i<actorNumber;++i)
+                    {
+                        var actor = GameHelper.spawnUnit(pTile,"humans",false);
+                        actor.CallMethod("becomeCitizen",city);
+                    }
+
+                }else{
                     return null;
                 }
                 return Reflection.GetField(city.GetType(), city, "kingdom") as Kingdom;
