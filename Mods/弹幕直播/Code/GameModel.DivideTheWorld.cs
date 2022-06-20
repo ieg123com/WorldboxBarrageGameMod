@@ -34,6 +34,8 @@ namespace BarrageGame
 
         private bool taskCompleted = false;
 
+        private int createkingdomCount = 0;
+
         void Awake()
         {
             Debug.Log(">>>>>>>>>>> DivideTheWorld.Awake");
@@ -57,6 +59,13 @@ namespace BarrageGame
                 SecondsUpdate();
             }
 
+            if(createkingdomCount > 0)
+            {
+                createkingdomCount--;
+                GameHelper.KingdomThings.RandomCreate();
+
+            }
+
 
 
         }
@@ -73,12 +82,9 @@ namespace BarrageGame
                     {
                         stageType = StageType.B;
                         //GameHelper.Paused(false);
-                        if(MKingdomManager.instance.allKingdoms.Count < 15)
+                        if(MKingdomManager.instance.allKingdoms.Count < 20)
                         {
-                            for(int i = MKingdomManager.instance.allKingdoms.Count;i<15;++i)
-                            {
-                                GameHelper.KingdomThings.RandomCreate();
-                            }
+                            createkingdomCount = 20 - MKingdomManager.instance.allKingdoms.Count;
                         }
 
                         GameHelper.SetTimeScale(40f);
