@@ -78,7 +78,7 @@ namespace BarrageGame
                 case StageType.A:
                 {
                     aTimer += 1f;
-                    if(aTimer >= 120f)
+                    if(aTimer >= 90f)
                     {
                         stageType = StageType.B;
                         //GameHelper.Paused(false);

@@ -117,9 +117,11 @@ namespace BarrageGame
             mKingdom.kingPlayerUid = player.uid;
             mKingdom.SetName(player.name);
             mKingdom.SetHeadSprite(player.headSprite);
-
-            player.uIKingdom = UIKingdomList.instance.GetUIKingdom();
-            player.ReflectionUIKingdom();
+            if(mKingdom.uIKingdom == null)
+            {
+                mKingdom.uIKingdom = UIKingdomList.instance.GetUIKingdom();
+            }
+            mKingdom.ReflectionUIKingdom();
 
         }
 
@@ -198,6 +200,8 @@ namespace BarrageGame
                 PeaceInitiator.peaceList.Add(mKingdom.id);
             }
         }
+
+
         // 协助
         static public void MsgAssist(Player player,MessageDistribute.NormalMsg msg)
         {
@@ -228,6 +232,7 @@ namespace BarrageGame
                 // 这个国家没救了，领土都没了
                 return ;
             }
+            // TODO 协助流程
             var unit = UnitFactory.Create(tile,"humans");
             player.kingdomCivId = mKingdom.id;
             player.unitId = unit.Id;
@@ -239,7 +244,16 @@ namespace BarrageGame
                 unit.head = player.headSprite;
                 unit.Apply();
             }
+            mKingdom.AddUnit(unit);
 
+            // TODO 创建UI
+            if(mKingdom.uIKingdom == null)
+            {
+                // 不是电脑
+                // 创建ui
+                unit.uIUnit = mKingdom.uIKingdom.GetUIUnit();
+                unit.ReflectionUIUnit();
+            }
         }
 
         static public void MsgToAttack(Player player,MessageDistribute.NormalMsg msg)

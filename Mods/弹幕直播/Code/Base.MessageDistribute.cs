@@ -25,8 +25,11 @@ namespace BarrageGame
         static public MessageDistribute instance;
 
         public Dictionary<string,Action<Player,NormalMsg>> AllNormalMsg = new Dictionary<string,Action<Player,NormalMsg>>();
+        // 帧消息，每帧只执行一次
+        public Dictionary<string,Action<Player,NormalMsg>> AllNormalFrameMsg = new Dictionary<string,Action<Player,NormalMsg>>();
         public Action<Player,NormalMsg> OnNormalMsg;
         public Action<Player,GiftMsg> OnGiftMsg;
+
 
         public MessageDistribute()
         {
@@ -49,6 +52,12 @@ namespace BarrageGame
                 {
                     action(player,msg);
                 }
+                if(AllNormalFrameMsg.TryGetValue(list[0],out action))
+                {
+                    Main.frameActions.Enqueue(()=>{
+                        action(player,msg);
+                    });
+                }
             }
         }
 
@@ -69,6 +78,16 @@ namespace BarrageGame
                 AllNormalMsg[comm] = action;
             }else{
                 AllNormalMsg.Add(comm,action);
+            }
+        }
+
+        public void BindNormalMsgFrameEvent(string comm,Action<Player,NormalMsg> action)
+        {
+            if(AllNormalFrameMsg.ContainsKey(comm))
+            {
+                AllNormalFrameMsg[comm] = action;
+            }else{
+                AllNormalFrameMsg.Add(comm,action);
             }
         }
 

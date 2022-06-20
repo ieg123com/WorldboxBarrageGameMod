@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UIKingdomList : MonoBehaviour
 {
     static public UIKingdomList instance;
+
     public GameObject goMain;
     public GameObject goContent;
 
@@ -13,7 +14,7 @@ public class UIKingdomList : MonoBehaviour
 
     private int uiKingdomItemCount = 0;
 
-    void Awake()
+    private void Awake()
     {
         instance = this;
     }
@@ -26,12 +27,13 @@ public class UIKingdomList : MonoBehaviour
             goMain = new GameObject("KingdomList");
             goMain.transform.SetParent(transform);
             goMain.AddComponent<RectTransform>();
+            goMain.AddComponent<Image>().color = Color.clear;
             var rect = goMain.GetComponent<RectTransform>();
             rect.anchorMin = Vector2.one;
             rect.anchorMax = Vector2.one;
-            rect.sizeDelta=new Vector2(300, 400);
-            rect.anchoredPosition = new Vector2(0, -20);
-            rect.pivot = new Vector2(1, 1f);
+            rect.sizeDelta=new Vector2(400, 400);
+            rect.anchoredPosition = new Vector2(-5, -20);
+            rect.pivot = new Vector2(1f, 1f);
             goMain.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
 
@@ -42,9 +44,10 @@ public class UIKingdomList : MonoBehaviour
             vert.childForceExpandWidth = true;
             vert.childControlHeight = false;
             rect = goContent.GetComponent<RectTransform>();
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.sizeDelta=new Vector2(0, 0);
+            rect.anchorMin = new Vector2(0, 1);
+            rect.anchorMax = new Vector2(0, 1);
+            rect.pivot = new Vector2(0f, 1f);
+            rect.sizeDelta=new Vector2(400, 0);
             rect.anchoredPosition = new Vector2(0, 0);
 
         }
@@ -63,6 +66,8 @@ public class UIKingdomList : MonoBehaviour
         UIKingdom ret = itemList[uiKingdomItemCount];
         ret.goMain.SetActive(true);
         ++uiKingdomItemCount;
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(goContent.GetComponent<RectTransform>());
+        UIKingdomList.instance.ForceRebuildLayout();
         return ret;
     }
 
@@ -74,6 +79,11 @@ public class UIKingdomList : MonoBehaviour
             item.goMain.SetActive(false);
         }
         uiKingdomItemCount = 0;
+    }
+
+    public void ForceRebuildLayout()
+    {
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(goMain.GetComponent<RectTransform>());
     }
 
 

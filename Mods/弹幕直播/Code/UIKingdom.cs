@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using NCMS;
-using NCMS.Utils;
-using ReflectionUtility;
 
 public class UIKingdom
 {
     public GameObject goMain = null;
+    public GameObject goContent;
+
     public Image image;
     public Text name;
-    public Text fraction;
+    public Text score;
     public Text kDA;
+
+
+    public List<UIUnit> itemList = new List<UIUnit>();
+
+    private int uiUnitItemCount = 0;
     // 刷新显示
     public void RefreshDisplay()
     {
@@ -23,22 +27,33 @@ public class UIKingdom
             rect = goMain.AddComponent<RectTransform>();
             rect.anchorMin = new Vector2(0, 1);
             rect.anchorMax = new Vector2(0, 1);
-            rect.sizeDelta = new Vector2(350, 32);
+            rect.sizeDelta = new Vector2(400, 32);
             rect.pivot = Vector2.zero;
+            goMain.AddComponent<Image>().color = Color.clear;
+
+            var vert = goMain.AddComponent<VerticalLayoutGroup>();
+            vert.childForceExpandHeight = false;
+            vert.childForceExpandWidth = true;
+            vert.childControlHeight = false;
+            vert.childControlWidth = true;
+            var contentSizeFitter = goMain.AddComponent<ContentSizeFitter>();
+            contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
 
             var kingdomItem = new GameObject("KingdomItem");
             kingdomItem.transform.SetParent(goMain.transform);
             rect = kingdomItem.AddComponent<RectTransform>();
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.sizeDelta = new Vector2(0, 0);
-            rect.pivot = new Vector2(0, 1);
+            rect.anchorMin = new Vector2(0, 1);
+            rect.anchorMax = new Vector2(1, 1);
+            rect.sizeDelta = new Vector2(0, 32);
+            rect.pivot = new Vector2(0.5f, 1);
 
             var go = new GameObject("Panel");
             go.transform.SetParent(kingdomItem.transform);
             var tempImage = go.AddComponent<Image>();
-            //tempImage.sprite = Sprites.LoadSprite("Resources/unity_builtin_extra/Background");
-            tempImage.color = new Color(1,1,1,0.5f);
+            tempImage.sprite = Resources.Load("Resources/unity_builtin_extra/Background", typeof(Sprite)) as Sprite;
+            tempImage.color = new Color(1, 1, 1, 0.5f);
             rect = go.GetComponent<RectTransform>();
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
@@ -70,17 +85,17 @@ public class UIKingdom
             rect.sizeDelta = new Vector2(100, 32);
             rect.pivot = new Vector2(0f, 0.5f);
 
-            go = new GameObject("Fraction");
+            go = new GameObject("Score");
             go.transform.SetParent(kingdomItem.transform);
-            fraction = go.AddComponent<Text>();
-            fraction.font = Font.CreateDynamicFontFromOSFont("Arial", 14);
-            fraction.alignment = TextAnchor.MiddleLeft;
-            fraction.color = Color.black;
-            fraction.text = "fraction";
+            score = go.AddComponent<Text>();
+            score.font = Font.CreateDynamicFontFromOSFont("Arial", 14);
+            score.alignment = TextAnchor.MiddleCenter;
+            score.color = Color.black;
+            score.text = "score";
             rect = go.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(1, 0.5f);
             rect.anchorMax = new Vector2(1, 0.5f);
-            rect.anchoredPosition = new Vector2(-77, 0);
+            rect.anchoredPosition = new Vector2(-177, 0);
             rect.sizeDelta = new Vector2(84, 32);
             rect.pivot = new Vector2(0.5f, 0.5f);
 
@@ -94,12 +109,75 @@ public class UIKingdom
             rect = go.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(1, 0.5f);
             rect.anchorMax = new Vector2(1, 0.5f);
-            rect.anchoredPosition = new Vector2(-16, 0);
+            rect.anchoredPosition = new Vector2(-24, 0);
             rect.sizeDelta = new Vector2(33, 32);
             rect.pivot = new Vector2(0.5f, 0.5f);
+
+
+            // Verical Layout Group
+            goContent = new GameObject("Content");
+            goContent.transform.SetParent(goMain.transform);
+            vert = goContent.AddComponent<VerticalLayoutGroup>();
+            vert.childForceExpandHeight = false;
+            vert.childForceExpandWidth = true;
+            vert.childControlHeight = false;
+            vert.childControlWidth = true;
+            rect = goContent.GetComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.sizeDelta=new Vector2(0, 0);
+            rect.anchoredPosition = new Vector2(0, 0);
+
+            goContent.AddComponent<Image>().color = Color.clear;
+            contentSizeFitter = goContent.AddComponent<ContentSizeFitter>();
+            contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
         }
     }
 
 
+    public UIUnit GetUIUnit()
+    {
+        if (itemList.Count <= uiUnitItemCount)
+        {
+            var item = new UIUnit();
+            item.RefreshDisplay();
+            item.goMain.transform.SetParent(goContent.transform);
+            itemList.Add(item);
+        }
+        UIUnit ret = itemList[uiUnitItemCount];
+        ret.goMain.SetActive(true);
+        ++uiUnitItemCount;
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(goContent.GetComponent<RectTransform>());
+        UIKingdomList.instance.ForceRebuildLayout();
+        return ret;
+    }
+
+    public void Remove(UIUnit uIUnit)
+    {
+        if (uIUnit.goMain.transform.parent != goContent.transform)
+        {
+            return;
+        }
+        // 开始移除
+        itemList.Remove(uIUnit);
+        uIUnit.goMain.SetActive(false);
+        uIUnit.goMain.transform.SetParent(null);
+        uIUnit.goMain.transform.SetParent(goContent.transform);
+        itemList.Add(uIUnit);
+        --uiUnitItemCount;
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(goContent.GetComponent<RectTransform>());
+        UIKingdomList.instance.ForceRebuildLayout();
+    }
+
+    public void Clear()
+    {
+        foreach (var item in itemList)
+        {
+            item.goMain.SetActive(false);
+        }
+        uiUnitItemCount = 0;
+    }
 
 }

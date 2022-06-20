@@ -18,7 +18,7 @@ namespace BarrageGame
         public Sprite head;
         public Actor actor;
 
-
+        public UIUnit uIUnit = null;
 
         public void Apply()
         {
@@ -54,6 +54,22 @@ namespace BarrageGame
             
             Debug.Log("设置 head");
 
+        }
+
+        public void ReflectionUIUnit()
+        {
+            if(uIUnit == null)
+            {
+                return;
+            }
+            var player = PlayerManager.instance.GetByKey(ownerPlayerUid);
+            if(player == null)
+            {
+                return;
+            }
+            uIUnit.image.sprite = player.headSprite;
+            uIUnit.name.text = $"[{Id.Substring(2)}]{player.name}";
+            uIUnit.kGlK.text = $"{player.playerDataInfo.unitDataInfo.killUnitNum}/{player.playerDataInfo.unitDataInfo.killWarriorNum}/{player.playerDataInfo.unitDataInfo.killLeaderNum}/{player.playerDataInfo.unitDataInfo.killKingNum}";
         }
     }
 

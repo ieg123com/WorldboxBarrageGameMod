@@ -49,6 +49,8 @@ namespace BarrageGame{
         static public List<Actor> allActor = new List<Actor>();
 
         static public Queue<Action> actions = new Queue<Action>();
+        // 帧事件
+        static public Queue<Action> frameActions = new Queue<Action>();
 
         void Awake(){
             instance = this;
@@ -130,6 +132,18 @@ namespace BarrageGame{
                 while(actions.Count > 0)
                 {
                     var action = actions.Dequeue();
+                    action();
+                }
+
+            }catch(Exception e)
+            {
+                Debug.Log(e);
+            }
+
+            try{
+                if(frameActions.Count > 0)
+                {
+                    var action = frameActions.Dequeue();
                     action();
                 }
             }catch(Exception e)

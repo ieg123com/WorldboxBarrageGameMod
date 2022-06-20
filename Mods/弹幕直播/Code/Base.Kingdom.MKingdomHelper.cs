@@ -30,6 +30,8 @@ namespace BarrageGame
             ModEvent.destroyActor = new Action<Actor>(DestroyActor);
             ModEvent.killHimself = new Action<Actor, bool, AttackType, bool, bool>(KillHimself);
             ModEvent.capitalChange = new Action<Kingdom,City,City>(CapitalChange);
+            // Actor 国家变动
+            ModEvent.actorKingdomChanged = new Action<Actor,Kingdom,Kingdom>(ActorKingdomChanged);
         }
 
 
@@ -68,8 +70,8 @@ namespace BarrageGame
                     {
                         playerKiller.playerDataInfo.kingdomDataInfo.killNum += 1;
                         playerKiller.dataChanged = true;
-                        playerKiller.ReflectionUIKingdom();
                     }
+                    kingdomKiller.ReflectionUIKingdom();
                 }
             }
 
@@ -84,7 +86,7 @@ namespace BarrageGame
                 // TODO 计分
                 player.playerDataInfo.kingdomDataInfo.deathNum += 1;
                 player.dataChanged = true;
-                player.ReflectionUIKingdom();
+                mKingdom.ReflectionUIKingdom();
             }
 
             player.kingdomCivId = "";
@@ -111,6 +113,60 @@ namespace BarrageGame
             mKingdom.capital = newCity;
         }
 
+        // Actor 所属的国家变动
+        static public void ActorKingdomChanged(Actor actor,Kingdom newKingdom,Kingdom oldKingdom)
+        {
+            if(newKingdom == null || oldKingdom == null)
+            {
+                return;
+            }
+
+            var unit = UnitManager.instance.GetByKey(actor.GetID());
+            if(unit == null)
+            {
+                return;
+            }
+            // 更新 unit 所属的国家
+            {
+                // 先清除ui
+                var oldMKingdom = MKingdomManager.instance.GetByKey(oldKingdom.id);
+                if(oldMKingdom != null && oldMKingdom.uIKingdom != null && unit.uIUnit != null)
+                {
+                    oldMKingdom.uIKingdom.Remove(unit.uIUnit);
+                    unit.uIUnit = null;
+
+                }
+                // 将ui移到其他国家下
+                var newMKingdom = MKingdomManager.instance.GetByKey(newKingdom.id);
+                if(newMKingdom != null)
+                {
+                    if(newMKingdom.uIKingdom == null)
+                    {
+                        // 这是电脑，还没创建UI
+                        newMKingdom.uIKingdom = UIKingdomList.instance.GetUIKingdom();
+                        newMKingdom.ReflectionUIKingdom();
+                    }
+                    unit.uIUnit = newMKingdom.uIKingdom.GetUIUnit();
+                    unit.ReflectionUIUnit();
+                }
+            }
+            
+            // TODO 将 unit 转移到其他MKingdom下
+            {
+                var oldMKingdom = MKingdomManager.instance.GetByKey(oldKingdom.id);
+                if(oldMKingdom != null)
+                {
+                    oldMKingdom.RemoveUnit(unit.Id);
+                }
+                var newMKingdom = MKingdomManager.instance.GetByKey(newKingdom.id);
+                if(newMKingdom != null)
+                {
+                    newMKingdom.AddUnit(unit);
+                }
+            }
+
+        }
+
         static public void RemoveCitizen(Actor pActor, bool pKilled, AttackType pAttackType)
         {
             
@@ -118,23 +174,65 @@ namespace BarrageGame
 
         static public void KillHimself(Actor pActor,bool pDestroy, AttackType pType, bool pCountDeath, bool pLaunchCallbacks)
         {
+            // Actor死亡
+            var attackActor = pActor.GetAttackActor();
+            if(attackActor != null)
+            {
+                // 可能是某个玩家击杀的
+                var attackUnit = UnitManager.instance.GetByKey(attackActor.GetID());
+                if(attackUnit != null)
+                {
+                    // 是玩家击杀的
+                    var attackPlayer = PlayerManager.instance.GetByKey(attackUnit.ownerPlayerUid);
+                    if(attackPlayer != null)
+                    {
+                        // TODO 判断击杀的单位是？
+                        ActorStatus actorStatus = Reflection.GetField(pActor.GetType(),pActor,"data") as ActorStatus;
+                        Debug.Log($"杀死的单位是 {actorStatus.profession.ToString()}");
+                        switch(actorStatus.profession)
+                        {
+                            case UnitProfession.King:
+                            attackPlayer.playerDataInfo.unitDataInfo.killKingNum +=1;
+                            break;
+                            case UnitProfession.Leader:
+                            attackPlayer.playerDataInfo.unitDataInfo.killLeaderNum +=1;
+                            break;
+                            case UnitProfession.Warrior:
+                            attackPlayer.playerDataInfo.unitDataInfo.killWarriorNum +=1;
+                            break;
+                            case UnitProfession.Unit:
+                            attackPlayer.playerDataInfo.unitDataInfo.killUnitNum +=1;
+                            break;
+                            case UnitProfession.Baby:
+                            attackPlayer.playerDataInfo.unitDataInfo.killBabyNum +=1;
+                            break;
+                            default:
+                            break;
+                        }
+                        attackPlayer.dataChanged = true;
+                        attackUnit.ReflectionUIUnit();
+                    }
+                }
+                
+            }
+
+
             var unit = UnitManager.instance.GetByKey(pActor.GetID());
             if(unit == null)
             {
                 return;
             }
-            Debug.Log($"KillHimself id = {pActor.GetID()}, pAttackType = {pType.ToString()}");
-            if(unit.ownerPlayerUid != 0)
+            // 死亡的是自己
+            var player = PlayerManager.instance.GetByKey(unit.ownerPlayerUid);
+            if(player != null)
             {
-                var player= PlayerManager.instance.GetByKey(unit.ownerPlayerUid);
-                if(player != null)
-                {
-                    player.kingdomCivId = "";
-                    player.unitId = null;
-                }
-                unit.ownerPlayerUid = 0;
+                player.playerDataInfo.unitDataInfo.deathNum += 1;
+                player.dataChanged = true;
+                unit.ReflectionUIUnit();
             }
-            UnitManager.instance.Remove(unit.Id);
+
+
+            DestroyActor(pActor);
         }
 
         static public void DestroyActor(Actor pActor)
@@ -144,7 +242,18 @@ namespace BarrageGame
             {
                 return;
             }
-            Debug.Log($"DestroyActor id = {pActor.GetID()}");
+            Debug.Log($"KillHimself id = {pActor.GetID()}");
+            // 先清除ui
+            {
+                var mKingdom = MKingdomManager.instance.GetByKey(pActor.kingdom.id);
+                if(mKingdom != null && mKingdom.uIKingdom != null && unit.uIUnit != null)
+                {
+                    mKingdom.uIKingdom.Remove(unit.uIUnit);
+                    unit.uIUnit = null;
+                }
+            }
+
+
             if(unit.ownerPlayerUid != 0)
             {
                 var player= PlayerManager.instance.GetByKey(unit.ownerPlayerUid);
@@ -154,9 +263,16 @@ namespace BarrageGame
                     player.unitId = null;
                 }
                 unit.ownerPlayerUid = 0;
+                var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+                if(mKingdom != null)
+                {
+                    mKingdom.RemoveUnit(unit.Id);
+                }
             }
             UnitManager.instance.Remove(unit.Id);
         }
+
+
         static public void CheckNewKingdom()
         {
             if(Main.startGame == false)
@@ -354,6 +470,12 @@ namespace BarrageGame
                 city.joinAnotherKingdom(pKingdom.kingdom);
             }
             list.Clear();
+        }
+
+        // 是电脑
+        public static bool IsComputer(this MKingdom self)
+        {
+            return (self.kingPlayerUid == 0);
         }
     }
 }

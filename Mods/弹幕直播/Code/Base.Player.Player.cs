@@ -27,6 +27,26 @@ namespace BarrageGame
         [JsonProperty("winNum")]
         public long winNum = 0;
     }
+    // 单位游玩信息
+    public class UnitDataInfo
+    {
+        [JsonProperty("killBabyNum")]
+        public long killBabyNum = 0;
+        [JsonProperty("killUnitNum")]
+        public long killUnitNum = 0;
+        // 击杀民众数
+        [JsonProperty("killWarriorNum")]
+        public long killWarriorNum = 0;
+        // 击杀领袖数
+        [JsonProperty("killLeaderNum")]
+        public long killLeaderNum = 0;
+        // 击杀国王数
+        [JsonProperty("killKingNum")]
+        public long killKingNum = 0;
+        // 自己死亡数
+        [JsonProperty("deathNum")]
+        public long deathNum = 0;
+    }
     // 玩家存档
     public class PlayerDataInfo
     {
@@ -34,6 +54,8 @@ namespace BarrageGame
         public long uid = 0;
         [JsonProperty("kingdomDataInfo")]
         public KingdomDataInfo kingdomDataInfo = new KingdomDataInfo();
+        [JsonProperty("unitDataInfo")]
+        public UnitDataInfo unitDataInfo = new UnitDataInfo();
     }
 
 
@@ -50,9 +72,9 @@ namespace BarrageGame
         public bool isKingPlayer = false;
         // 控制的单位uid
         public string unitId = null;
+
         public long lastSpeechTime = 0;
 
-        public UIKingdom uIKingdom = null;
 
         // 玩家存档信息
         public PlayerDataInfo playerDataInfo = new PlayerDataInfo();
@@ -64,23 +86,7 @@ namespace BarrageGame
             StartCoroutine(DownloadHeadImage());
         }
 
-        public void ReflectionUIKingdom()
-        {
-            if(uIKingdom == null)
-            {
-                return;
-            }
-            uIKingdom.image.sprite = headSprite;
-            uIKingdom.name.text = $"[{kingdomCivId.Substring(2)}]{name}";
-            uIKingdom.fraction.text = $"{playerDataInfo.kingdomDataInfo.killNum}/{playerDataInfo.kingdomDataInfo.deathNum}/{playerDataInfo.kingdomDataInfo.winNum}";
-            if(playerDataInfo.kingdomDataInfo.deathNum <= 0)
-            {
-                uIKingdom.kDA.text = String.Format("{0:F}",playerDataInfo.kingdomDataInfo.killNum);
-            }else
-            {
-                uIKingdom.kDA.text = String.Format("{0:F}",(float)playerDataInfo.kingdomDataInfo.killNum / (float)playerDataInfo.kingdomDataInfo.deathNum);
-            }
-        }
+
 
 
         
@@ -106,18 +112,16 @@ namespace BarrageGame
             {
                 var mKingdom = MKingdomManager.instance.GetByKey(kingdomCivId);
                 mKingdom.SetHeadSprite(headSprite);
+                mKingdom.uIKingdom.image.sprite = headSprite;
             }
             if(unitId != null)
             {
                 var unit = UnitManager.instance.GetByKey(unitId);
                 unit.head = headSprite;
                 unit.Apply();
+                unit.uIUnit.image.sprite = headSprite;
             }
-            if(uIKingdom != null)
-            {
-                uIKingdom.image.sprite = headSprite;
-            }
-            
+
         }
 
         
