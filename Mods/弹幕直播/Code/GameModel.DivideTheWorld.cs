@@ -72,7 +72,15 @@ namespace BarrageGame
                     if(aTimer >= 120f)
                     {
                         stageType = StageType.B;
-                        GameHelper.Paused(false);
+                        //GameHelper.Paused(false);
+                        if(MKingdomManager.instance.allKingdoms.Count < 15)
+                        {
+                            for(int i = MKingdomManager.instance.allKingdoms.Count;i<15;++i)
+                            {
+                                GameHelper.KingdomThings.RandomCreate();
+                            }
+                        }
+
                         GameHelper.SetTimeScale(40f);
                     }
                     break;

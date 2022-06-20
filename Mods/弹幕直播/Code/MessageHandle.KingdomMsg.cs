@@ -68,38 +68,38 @@ namespace BarrageGame
                 Debug.Log($"玩家 {player.name} 已经加入国家 {player.kingdomCivId}");
                 return;
             }
-            /*
+            MKingdom mKingdom = null;
             var comm = msg.msg.Split(' ');
-            if(comm.Length < 2)
+            if(comm.Length == 2)
             {
                 // 命令错误
-                return;
+                mKingdom = MKingdomManager.instance.GetByKey($"k_{comm[1]}");
+            }else{
+                int allPopulationTotal = 0;
+                int avPopulationTotal = 0;
+                {
+                    // TODO 获取平均人口
+                    if(MKingdomManager.instance.allKingdoms.Count > 0)
+                    {
+                        foreach(var v in MKingdomManager.instance.allKingdoms.Values)
+                        {
+                            allPopulationTotal += v.kingdom.getPopulationTotal();
+                        }
+                        avPopulationTotal = allPopulationTotal / MKingdomManager.instance.allKingdoms.Count;
+                    }
+                }
+                // TODO 创建国家，并追平其他国家人口
+                var kingdom = GameHelper.KingdomThings.RandomCreate(avPopulationTotal);
+                if(kingdom == null)
+                {
+                    MapBox.instance.addNewText("国家已满，无法加入!", Toolbox.color_log_warning, null);
+                    return;
+                }
+                mKingdom = MKingdomManager.instance.GetByKey(kingdom.id);
+                
             }
             
-            */
-            int allPopulationTotal = 0;
-            int avPopulationTotal = 0;
-            {
-                // TODO 获取平均人口
-                if(MKingdomManager.instance.allKingdoms.Count > 0)
-                {
-                    foreach(var v in MKingdomManager.instance.allKingdoms.Values)
-                    {
-                        allPopulationTotal += v.kingdom.getPopulationTotal();
-                    }
-                    avPopulationTotal = allPopulationTotal / MKingdomManager.instance.allKingdoms.Count;
-                }
-            }
-            // TODO 创建国家，并追平其他国家人口
-            var kingdom = GameHelper.KingdomThings.RandomCreate(avPopulationTotal);
-            if(kingdom == null)
-            {
-                MapBox.instance.addNewText("国家已满，无法加入!", Toolbox.color_log_warning, null);
-                return;
-            }
-
-
-            var mKingdom = MKingdomManager.instance.GetByKey(kingdom.id);
+            
             if(mKingdom == null)
             {
                 // 国家不存在
