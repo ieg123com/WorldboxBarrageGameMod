@@ -32,6 +32,8 @@ namespace BarrageGame
             ModEvent.capitalChange = new Action<Kingdom,City,City>(CapitalChange);
             // Actor 国家变动
             ModEvent.actorKingdomChanged = new Action<Actor,Kingdom,Kingdom>(ActorKingdomChanged);
+            // ActorBase 属性更新
+            ModEvent.actorBaseUpdataStats = new Action<ActorBase>(ActorBaseUpdataStats);
         }
 
 
@@ -167,6 +169,19 @@ namespace BarrageGame
 
         }
 
+        static public void ActorBaseUpdataStats(ActorBase pActorBase)
+        {
+            var unit = UnitManager.instance.GetByKey(pActorBase.GetID());
+            if(unit == null)
+            {
+                return;
+            }
+            // 是玩家控制的单位
+            var curStats = Reflection.GetField(pActorBase.GetType(),pActorBase,"curStats") as BaseStats;
+            curStats.health += 2000;
+            curStats.damage += 10;
+        }
+
         static public void RemoveCitizen(Actor pActor, bool pKilled, AttackType pAttackType)
         {
             
@@ -188,7 +203,7 @@ namespace BarrageGame
                     {
                         // TODO 判断击杀的单位是？
                         ActorStatus actorStatus = Reflection.GetField(pActor.GetType(),pActor,"data") as ActorStatus;
-                        Debug.Log($"杀死的单位是 {actorStatus.profession.ToString()}");
+                        Debug.Log($"杀死的单位是 [{pActor.GetID()}]{actorStatus.profession.ToString()}");
                         switch(actorStatus.profession)
                         {
                             case UnitProfession.King:
@@ -261,13 +276,14 @@ namespace BarrageGame
                 {
                     player.kingdomCivId = "";
                     player.unitId = null;
+                    var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+                    if(mKingdom != null)
+                    {
+                        mKingdom.RemoveUnit(unit.Id);
+                    }
                 }
                 unit.ownerPlayerUid = 0;
-                var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
-                if(mKingdom != null)
-                {
-                    mKingdom.RemoveUnit(unit.Id);
-                }
+ 
             }
             UnitManager.instance.Remove(unit.Id);
         }
