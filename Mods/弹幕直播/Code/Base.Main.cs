@@ -32,8 +32,8 @@ namespace BarrageGame{
         public MKingdomManager mKingdomManager;
         public UnitManager unitManager;
 
-        public WebSocketToSelf DanmakuMessage = new WebSocketToSelf();
-        //public WebSocketToCCWSS DanmakuMessage = new WebSocketToCCWSS();
+        //public WebSocketToSelf DanmakuMessage = new WebSocketToSelf();
+        public WebSocketToCCWSS DanmakuMessage = new WebSocketToCCWSS();
 
         public LoadStatus loadStatus;
 
@@ -87,7 +87,7 @@ namespace BarrageGame{
 
             Debug.Log("Test Over");
 
-            DanmakuMessage.Connect("ws://127.0.0.1:8088");
+            DanmakuMessage.Connect("ws://127.0.0.1:8080");
 
 
 
@@ -183,13 +183,32 @@ namespace BarrageGame{
 
         static void SpawnTest()
         {
-            
+            //var itemData = new ItemData();
+            //itemData.id = "sword";
+            //itemData.by = "Nikon";
+            //itemData.material = "stone";
+            //itemData.modifiers = new List<string>();
+            //itemData.modifiers.Add("normal");
+            //itemData.modifiers.Add("normal");
+            //itemData.modifiers.Add("normal");
 
-            GameHelper.KingdomThings.RandomCreate();
+            /*
+            var worldTile = MapBox.instance.GetTile(UnityEngine.Random.Range(0,MapBox.width),UnityEngine.Random.Range(0,MapBox.height));
+            var actor = GameHelper.spawnUnit(worldTile,"humans");
+            ItemAsset pItemAsset = AssetManager.items.get("sword");
+            ItemData item = ItemGenerator.generateItem(pItemAsset, "stone", 0, null, null, 1, actor);
+            ActorEquipmentSlot slot = actor.equipment.getSlot(EquipmentType.Weapon);
+            slot.CallMethod("setItem",item);
+            actor.setStatsDirty();
+            */
+			//actor.item_sprite_dirty = true;
+            //Reflection.SetField<bool>(actor, "item_sprite_dirty",true);
+            //GameHelper.KingdomThings.RandomCreate();
             return;
      
             //var worldTile = MapBox.instance.GetTile(UnityEngine.Random.Range(0,MapBox.width),UnityEngine.Random.Range(0,MapBox.height));
             
+/*
             var zoneCalculator = Reflection.GetField(MapBox.instance.GetType(), MapBox.instance, "zoneCalculator") as ZoneCalculator;
             Debug.Log($"zones.Count = {zoneCalculator.zones.Count}");
 
@@ -225,7 +244,7 @@ namespace BarrageGame{
                 }
             }
             Debug.Log($"cityCount = {cityCount}");
-            
+            */
             //Debug.Log($"worldTile.Type.layerType = {worldTile.Type.layerType}");
 
 

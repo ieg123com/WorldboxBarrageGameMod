@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 
@@ -24,16 +25,19 @@ namespace BarrageGame
 
         static public MessageDistribute instance;
 
-        public Dictionary<string,Action<Player,NormalMsg>> AllNormalMsg = new Dictionary<string,Action<Player,NormalMsg>>();
+        public Dictionary<string,Action<Player,NormalMsg,List<string>>> AllNormalMsg = new Dictionary<string,Action<Player,NormalMsg,List<string>>>();
         // 帧消息，每帧只执行一次
-        public Dictionary<string,Action<Player,NormalMsg>> AllNormalFrameMsg = new Dictionary<string,Action<Player,NormalMsg>>();
+        public Dictionary<string,Action<Player,NormalMsg,List<string>>> AllNormalFrameMsg = new Dictionary<string,Action<Player,NormalMsg,List<string>>>();
         public Action<Player,NormalMsg> OnNormalMsg;
         public Action<Player,GiftMsg> OnGiftMsg;
+
+        private Regex reg;
 
 
         public MessageDistribute()
         {
             MessageDistribute.instance = this;
+            reg = new Regex("^[a-zA-Z\u4e00-\u9fa5]+|[0-9]+");
         }
 
         public void DistributeNormalMsg(PlayerInfo info,NormalMsg msg)
@@ -44,18 +48,24 @@ namespace BarrageGame
             {
                 OnNormalMsg(player,msg);
             }
-            var list = msg.msg.Split(' ');
-            if(list.Length > 0)
+
+            List<string> list = new List<string>();
+            var match = reg.Matches(msg.msg);
+            for (int i = 0; i < match.Count; ++i)
             {
-                Action<Player,NormalMsg> action;
+                list.Add(match[i].Value);
+            }
+            if(list.Count > 0)
+            {
+                Action<Player,NormalMsg,List<string>> action;
                 if(AllNormalMsg.TryGetValue(list[0],out action))
                 {
-                    action(player,msg);
+                    action(player,msg,list);
                 }
                 if(AllNormalFrameMsg.TryGetValue(list[0],out action))
                 {
                     Main.frameActions.Enqueue(()=>{
-                        action(player,msg);
+                        action(player,msg,list);
                     });
                 }
             }
@@ -71,7 +81,7 @@ namespace BarrageGame
             }
         }
 
-        public void BindNormalMsgEvent(string comm,Action<Player,NormalMsg> action)
+        public void BindNormalMsgEvent(string comm,Action<Player,NormalMsg,List<string>> action)
         {
             if(AllNormalMsg.ContainsKey(comm))
             {
@@ -81,7 +91,7 @@ namespace BarrageGame
             }
         }
 
-        public void BindNormalMsgFrameEvent(string comm,Action<Player,NormalMsg> action)
+        public void BindNormalMsgFrameEvent(string comm,Action<Player,NormalMsg,List<string>> action)
         {
             if(AllNormalFrameMsg.ContainsKey(comm))
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using NCMS;
@@ -60,7 +61,7 @@ namespace BarrageGame
             }
         }
 
-        static public void MsgJoin(Player player,MessageDistribute.NormalMsg msg)
+        static public void MsgJoin(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
         {
             Debug.Log($"MsgJoin {msg.msg}");
             if(player.kingdomCivId != null && player.kingdomCivId != "")
@@ -69,8 +70,7 @@ namespace BarrageGame
                 return;
             }
             MKingdom mKingdom = null;
-            var comm = msg.msg.Split(' ');
-            if(comm.Length == 2)
+            if(comm.Count == 2)
             {
                 // 命令错误
                 mKingdom = MKingdomManager.instance.GetByKey($"k_{comm[1]}");
@@ -125,7 +125,7 @@ namespace BarrageGame
 
         }
 
-        static public void MsgSplite(Player player,MessageDistribute.NormalMsg msg)
+        static public void MsgSplite(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
         {
             if(player.kingdomCivId == null || player.kingdomCivId == "")
             {
@@ -137,8 +137,7 @@ namespace BarrageGame
                 Debug.Log($"玩家 {player.name} 没有控制权 {player.kingdomCivId}");
                 return;
             }
-            var comm = msg.msg.Split(' ');
-            if(comm.Length < 2)
+            if(comm.Count < 2)
             {
                 // 命令错误
                 return;
@@ -164,7 +163,7 @@ namespace BarrageGame
             WarInitiator.peaceList.Remove(mKingdom.id);
         }
 
-        static public void MsgPeace(Player player,MessageDistribute.NormalMsg msg)
+        static public void MsgPeace(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
         {
             if(player.kingdomCivId == null || player.kingdomCivId == "")
             {
@@ -176,8 +175,7 @@ namespace BarrageGame
                 Debug.Log($"玩家 {player.name} 没有控制权 {player.kingdomCivId}");
                 return;
             }
-            var comm = msg.msg.Split(' ');
-            if(comm.Length < 2)
+            if(comm.Count < 2)
             {
                 // 命令错误
                 return;
@@ -203,7 +201,7 @@ namespace BarrageGame
 
 
         // 协助
-        static public void MsgAssist(Player player,MessageDistribute.NormalMsg msg)
+        static public void MsgAssist(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
         {
             if(player.isKingPlayer == true)
             {
@@ -215,8 +213,7 @@ namespace BarrageGame
                 Debug.Log($"玩家 {player.name} 已经协助国家 {player.kingdomCivId}");
                 return;
             }
-            var comm = msg.msg.Split(' ');
-            if(comm.Length < 2)
+            if(comm.Count < 2)
             {
                 // 命令错误
                 return;
@@ -238,6 +235,13 @@ namespace BarrageGame
             player.unitId = unit.Id;
             unit.ownerPlayerUid = player.uid;
             unit.actor.CallMethod("setKingdom",mKingdom.kingdom);
+            {
+                // 添加物品，让他变成战斗单位
+                ItemAsset pItemAsset = AssetManager.items.get("sword");
+                ItemData item = ItemGenerator.generateItem(pItemAsset, "wood", 0, null, null, 1, unit.actor);
+                ActorEquipmentSlot slot = unit.actor.equipment.getSlot(EquipmentType.Weapon);
+                slot.CallMethod("setItem",item);
+            }
             unit.actor.setStatsDirty();
             if(player.headSprite != null)
             {
@@ -256,15 +260,14 @@ namespace BarrageGame
             }
         }
 
-        static public void MsgToAttack(Player player,MessageDistribute.NormalMsg msg)
+        static public void MsgToAttack(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
         {
             if(player.kingdomCivId == null || player.kingdomCivId == "")
             {
                 Debug.Log($"玩家 {player.name} 还没加入国家");
                 return;
             }
-            var comm = msg.msg.Split(' ');
-            if(comm.Length < 2)
+            if(comm.Count < 2)
             {
                 // 命令错误
                 return;
@@ -296,15 +299,14 @@ namespace BarrageGame
             }
         }
 
-        static public void MsgMoveToKingdom(Player player,MessageDistribute.NormalMsg msg)
+        static public void MsgMoveToKingdom(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
         {
             if(player.kingdomCivId == null || player.kingdomCivId == "")
             {
                 Debug.Log($"玩家 {player.name} 还没加入国家");
                 return;
             }
-            var comm = msg.msg.Split(' ');
-            if(comm.Length < 2)
+            if(comm.Count < 2)
             {
                 // 命令错误
                 return;
@@ -330,7 +332,7 @@ namespace BarrageGame
             }
         }
 
-        static public void MsgToBackArmy(Player player,MessageDistribute.NormalMsg msg)
+        static public void MsgToBackArmy(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
         {
             if(player.kingdomCivId == null || player.kingdomCivId == "")
             {
@@ -359,15 +361,14 @@ namespace BarrageGame
             }
         }
 
-        static public void MsgSurrender(Player player,MessageDistribute.NormalMsg msg)
+        static public void MsgSurrender(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
         {
             if(player.kingdomCivId == null || player.kingdomCivId == "")
             {
                 Debug.Log($"玩家 {player.name} 还没加入国家");
                 return;
             }
-            var comm = msg.msg.Split(' ');
-            if(comm.Length < 2)
+            if(comm.Count < 2)
             {
                 // 命令错误
                 return;
@@ -386,7 +387,7 @@ namespace BarrageGame
 
         }
 
-        static public void MsgToShowDiplomacy(Player player,MessageDistribute.NormalMsg msg)
+        static public void MsgToShowDiplomacy(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
         {
             if(player.kingdomCivId == null || player.kingdomCivId == "")
             {
