@@ -78,6 +78,7 @@ namespace BarrageGame
 
         // 玩家存档信息
         public PlayerDataInfo playerDataInfo = new PlayerDataInfo();
+        public UnitDataInfo currentUnitDataInfo = new UnitDataInfo();
 
         public bool dataChanged = false;
 

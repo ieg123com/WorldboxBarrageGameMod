@@ -10,7 +10,7 @@ using ReflectionUtility;
 namespace BarrageGame
 {
 
-    public class GameHelper
+    static public class GameHelper
     {
 
 
@@ -95,7 +95,7 @@ namespace BarrageGame
             }
 
             // 随机建国
-            public static Kingdom RandomCreate(int actorNumber = 1)
+            public static Kingdom RandomCreate(int actorNumber = 3)
             {
                 var zoneCalculator = Reflection.GetField(MapBox.instance.GetType(), MapBox.instance, "zoneCalculator") as ZoneCalculator;
                 if(zoneCalculator == null)
@@ -149,7 +149,7 @@ namespace BarrageGame
                 }
                 if(city != null)
                 {
-                    actorNumber = (actorNumber < 1)?1:actorNumber;
+                    actorNumber = (actorNumber < 3)?3:actorNumber;
                     for(int i = 0;i<actorNumber;++i)
                     {
                         var actor = GameHelper.spawnUnit(pTile,"humans",false);
@@ -175,6 +175,35 @@ namespace BarrageGame
                 return new Vector2(vector.x * canvasRect.sizeDelta.x - canvasRect.sizeDelta.x * 0.5f, vector.y * canvasRect.sizeDelta.y - canvasRect.sizeDelta.y * 0.5f);
             }
         }
+
+        static public class CityThings
+        {
+            // 这个城市可以任命官职
+            public static bool CanAddJob(City city)
+            {
+                if(city.leader != null && ActorThings.IsPlayer(city.leader) == true)
+                {
+                    return false;
+                }
+                if(city.army.groupLeader != null && city.army.groupLeader == true)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        public class ActorThings
+        {
+            // 是玩家的Actor
+            public static bool IsPlayer(Actor actor)
+            {
+                var unit = UnitManager.instance.GetByKey(actor.GetID());
+                return (unit != null);
+                
+            }
+        }
+
     }
 
 

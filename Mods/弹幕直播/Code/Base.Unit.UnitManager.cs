@@ -9,7 +9,22 @@ namespace BarrageGame
     {
         static public UnitManager instance;
 
+        static public int lastId = 0;
+
         public Dictionary<string,Unit> allUnit = new Dictionary<string,Unit>();
+        public Dictionary<string,string> unitId2StringId = new Dictionary<string,string>();
+
+
+        static public string GenerateUnitId()
+        {
+            ++lastId;
+            if(lastId == 7)
+            {
+                ++lastId;
+            }
+            return lastId.ToString();
+        }
+
         public UnitManager()
         {
             instance = this;
@@ -23,17 +38,28 @@ namespace BarrageGame
             {
                 Remove(unit.Id);
                 allUnit[unit.Id] = unit;
+                unitId2StringId[unit.unitId] = unit.Id;
+
             }else{
                 allUnit.Add(unit.Id,unit);
+                unitId2StringId.Add(unit.unitId,unit.Id);
             }
         }
 
         public void Remove(string id)
         {
-            if(allUnit.ContainsKey(id))
+            if(allUnit.TryGetValue(id,out var unit))
             {
-                allUnit.Remove(id);
+                if(unitId2StringId.ContainsKey(unit.unitId))
+                {
+                    unitId2StringId.Remove(unit.unitId);
+                }
+                if(allUnit.ContainsKey(id))
+                {
+                    allUnit.Remove(id);
+                }
             }
+            
         }
 
         public Unit GetByKey(string id)
@@ -46,12 +72,29 @@ namespace BarrageGame
             return null;
         }
 
+        public Unit GetByUnitId(string unitId)
+        {
+            if(unitId2StringId.TryGetValue(unitId,out var id))
+            {
+                return GetByKey(id);
+            }
+            return null;
+        }
+
         public void Clear()
         {
             allUnit.Clear();
+            unitId2StringId.Clear();
+            lastId = 0;
         }
 
-
+        public void SecondsUpdate()
+        {
+            foreach(var unit in allUnit.Values)
+            {
+                unit.SecondsUpdate();
+            }
+        }
 
     }
 }

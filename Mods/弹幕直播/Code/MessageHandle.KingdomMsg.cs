@@ -223,18 +223,13 @@ namespace BarrageGame
             {
                 return;
             }
-            var tile = GameHelper.KingdomThings.GetCapitalTile(mKingdom.kingdom);
-            if(tile == null)
-            {
-                // 这个国家没救了，领土都没了
-                return ;
-            }
+            City targetCity = mKingdom.kingdom.cities[UnityEngine.Random.Range(0,mKingdom.kingdom.cities.Count)];
             // TODO 协助流程
-            var unit = UnitFactory.Create(tile,"humans");
+            var unit = UnitFactory.Create(targetCity.getTile(),"humans");
             player.kingdomCivId = mKingdom.id;
             player.unitId = unit.Id;
             unit.ownerPlayerUid = player.uid;
-            unit.actor.CallMethod("setKingdom",mKingdom.kingdom);
+            unit.actor.CallMethod("becomeCitizen",targetCity);
             {
                 // 添加物品，让他变成战斗单位
                 ItemAsset pItemAsset = AssetManager.items.get("sword");
@@ -402,8 +397,244 @@ namespace BarrageGame
             }
             PeaceInitiator.ToShowDiplomacy();
         }
+        
+        // 罢免官职
+        static public void MsgFired(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
+        {
+            if(player.kingdomCivId == null || player.isKingPlayer == false)
+            {
+                // 没有控制的国家
+                return;
+            }
+            if(comm.Count < 2)
+            {
+                // 命令错误
+                return;
+            }
+            var unit = UnitManager.instance.GetByUnitId(comm[1]);
+            if(unit == null)
+            {
+                return;
+            }
+            var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+            if(mKingdom.kingdom != unit.actor.kingdom)
+            {
+                // 不是一个国家的，没权利罢免
+                return;
+            }
+            if(unit.actor.kingdom.king == unit.actor)
+            {
+                // 他也是国王，你没权力
+                return;
+            }
+
+            // TODO 开始罢免官职
+            // 检查是不是武将
+            var unitGroup = Reflection.GetField(unit.actor.GetType(),unit.actor,"unitGroup") as UnitGroup;
+            if(unitGroup != null && unitGroup.groupLeader == unit.actor)
+            {
+                // 是武将
+                unitGroup.CallMethod("setGroupLeader",null);
+            }
+            
+            // 检查是不是侯爷
+            if(unit.actor.city.leader == unit.actor)
+            {
+                // 是侯爷
+                unit.actor.city.removeLeader();
+            }
+
+        }
+
+        // 提升为武将，战斗队长
+        static public void MsgPromotedToGeneral(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
+        {
+            if(player.kingdomCivId == null || player.isKingPlayer == false)
+            {
+                // 没有控制的国家
+                return;
+            }
+            if(comm.Count < 2)
+            {
+                // 命令错误
+                return;
+            }
+            var unit = UnitManager.instance.GetByUnitId(comm[1]);
+            if(unit == null)
+            {
+                return;
+            }
+            var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+            if(mKingdom.kingdom != unit.actor.kingdom)
+            {
+                // 不是一个国家的，没权利提升
+                return;
+            }
+            if(unit.actor.kingdom.king == unit.actor)
+            {
+                // 他也是国王，你没权力
+                return;
+            }
 
 
+            // TODO 开始提升官职
+            // 检查是不是武将
+            var unitGroup = Reflection.GetField(unit.actor.GetType(),unit.actor,"unitGroup") as UnitGroup;
+            if(unitGroup != null && unitGroup.groupLeader == unit.actor)
+            {
+                // 是武将
+                return;
+            }
+            // 检查是不是侯爷
+            if(unit.actor.city.leader == unit.actor)
+            {
+                // 是侯爷
+                unit.actor.city.removeLeader();
+            }
+
+            List<City> allCity = new List<City>();
+            foreach (City city in mKingdom.kingdom.cities)
+            {
+                if(GameHelper.CityThings.CanAddJob(city))
+                {
+                    allCity.Add(city);
+                }
+            }
+            if(allCity.Count <= 0)
+            {
+                // 没有城市了
+                return;
+            }
+            // TODO 任命战斗队长
+            City targetCity = allCity[UnityEngine.Random.Range(0,allCity.Count)];
+            unit.actor.CallMethod("becomeCitizen",targetCity);
+            targetCity.army.CallMethod("setGroupLeader",unit.actor);
+            unit.GoTo(targetCity.getTile());
+        }
+
+        // 提升为侯爷
+        static public void MsgPromotedToLeader(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
+        {
+            if(player.kingdomCivId == null || player.isKingPlayer == false)
+            {
+                // 没有控制的国家
+                return;
+            }
+            if(comm.Count < 2)
+            {
+                // 命令错误
+                return;
+            }
+            var unit = UnitManager.instance.GetByUnitId(comm[1]);
+            if(unit == null)
+            {
+                return;
+            }
+            var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+            if(mKingdom.kingdom != unit.actor.kingdom)
+            {
+                // 不是一个国家的，没权利提升
+                return;
+            }
+            if(unit.actor.kingdom.king == unit.actor)
+            {
+                // 他也是国王，你没权力
+                return;
+            }
+
+
+            // TODO 开始提升官职
+            // 检查是不是武将
+            var unitGroup = Reflection.GetField(unit.actor.GetType(),unit.actor,"unitGroup") as UnitGroup;
+            if(unitGroup != null && unitGroup.groupLeader == unit.actor)
+            {
+                // 是武将
+                unitGroup.CallMethod("setGroupLeader",null);
+            }
+            // 检查是不是侯爷
+            if(unit.actor.city.leader == unit.actor)
+            {
+                // 是侯爷
+                return;
+            }
+
+            List<City> allCity = new List<City>();
+            foreach (City city in mKingdom.kingdom.cities)
+            {
+                if(GameHelper.CityThings.CanAddJob(city))
+                {
+                    allCity.Add(city);
+                }
+            }
+            if(allCity.Count <= 0)
+            {
+                // 没有城市了
+                return;
+            }
+            // TODO 任命侯爷
+            City targetCity = allCity[UnityEngine.Random.Range(0,allCity.Count)];
+            unit.actor.CallMethod("becomeCitizen",targetCity);
+            City.makeLeader(unit.actor, targetCity);
+            unit.GoTo(targetCity.getTile());
+        }
+
+        // 投靠
+        static public void MsgBetray(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
+        {
+            if(player.unitId == null)
+            {
+                return;
+            }
+            if(comm.Count < 2)
+            {
+                // 命令错误
+                return;
+            }
+            
+            var mKingdom = MKingdomManager.instance.GetByKey($"k_{comm[1]}");
+            var currentMKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+            if(mKingdom == null || currentMKingdom == null)
+            {
+                return;
+            }
+            var unit = UnitManager.instance.GetByKey(player.unitId);
+            if(unit == null)
+            {
+                return;
+            }
+
+            // 根据不同情况进行处理
+            // 检查是不是武将
+            var unitGroup = Reflection.GetField(unit.actor.GetType(),unit.actor,"unitGroup") as UnitGroup;
+            if(unitGroup != null && unitGroup.groupLeader == unit.actor)
+            {
+                // 是武将
+                unitGroup.CallMethod("setGroupLeader",null);
+            }
+
+            // 检查是不是侯爷 或 国王
+            if(unit.actor.city.leader == unit.actor || 
+            unit.actor.kingdom.king == unit.actor)
+            {
+                // 是侯爷
+                // 也可能是国王
+                // 将这块地一起送给投靠的国家
+                unit.actor.city.joinAnotherKingdom(mKingdom.kingdom);
+                return;
+            }else{
+                // 一个普普通通的人
+
+                if(mKingdom.kingdom.cities.Count <= 0)
+                {
+                    // 没有城市了
+                    return;
+                }
+                // TODO 投靠其他国家
+                City targetCity = mKingdom.kingdom.cities[UnityEngine.Random.Range(0,mKingdom.kingdom.cities.Count)];
+                unit.actor.CallMethod("becomeCitizen",targetCity);
+                unit.GoTo(targetCity.getTile());
+            }
+        }
     }
 
 

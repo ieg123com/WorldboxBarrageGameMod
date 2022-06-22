@@ -208,18 +208,23 @@ namespace BarrageGame
                         {
                             case UnitProfession.King:
                             attackPlayer.playerDataInfo.unitDataInfo.killKingNum +=1;
+                            attackPlayer.currentUnitDataInfo.killKingNum +=1;
                             break;
                             case UnitProfession.Leader:
                             attackPlayer.playerDataInfo.unitDataInfo.killLeaderNum +=1;
+                            attackPlayer.currentUnitDataInfo.killLeaderNum +=1;
                             break;
                             case UnitProfession.Warrior:
-                            attackPlayer.playerDataInfo.unitDataInfo.killWarriorNum +=1;
+                            attackPlayer.playerDataInfo.unitDataInfo.killLeaderNum +=1;
+                            attackPlayer.currentUnitDataInfo.killLeaderNum +=1;
                             break;
                             case UnitProfession.Unit:
                             attackPlayer.playerDataInfo.unitDataInfo.killUnitNum +=1;
+                            attackPlayer.currentUnitDataInfo.killUnitNum +=1;
                             break;
                             case UnitProfession.Baby:
                             attackPlayer.playerDataInfo.unitDataInfo.killBabyNum +=1;
+                            attackPlayer.currentUnitDataInfo.killBabyNum +=1;
                             break;
                             default:
                             break;
