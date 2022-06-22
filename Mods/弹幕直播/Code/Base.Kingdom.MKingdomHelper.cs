@@ -215,8 +215,8 @@ namespace BarrageGame
                             attackPlayer.currentUnitDataInfo.killLeaderNum +=1;
                             break;
                             case UnitProfession.Warrior:
-                            attackPlayer.playerDataInfo.unitDataInfo.killLeaderNum +=1;
-                            attackPlayer.currentUnitDataInfo.killLeaderNum +=1;
+                            attackPlayer.playerDataInfo.unitDataInfo.killWarriorNum +=1;
+                            attackPlayer.currentUnitDataInfo.killWarriorNum +=1;
                             break;
                             case UnitProfession.Unit:
                             attackPlayer.playerDataInfo.unitDataInfo.killUnitNum +=1;
