@@ -187,6 +187,7 @@ namespace BarrageGame{
 
         static void SpawnTest()
         {
+            MapBox.instance.mapStats.year = 0;
             //var itemData = new ItemData();
             //itemData.id = "sword";
             //itemData.by = "Nikon";

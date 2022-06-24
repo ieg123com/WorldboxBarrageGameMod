@@ -438,7 +438,9 @@ namespace BarrageGame
             if(unitGroup != null && unitGroup.groupLeader == unit.actor)
             {
                 // 是武将
-                unitGroup.CallMethod("setGroupLeader",null);
+                unitGroup.CallMethod("setGroupLeader",(Actor)null);
+                unitGroup.removeUnit(unit.actor);
+                Debug.Log("是武将");
             }
             
             // 检查是不是侯爷
@@ -446,6 +448,8 @@ namespace BarrageGame
             {
                 // 是侯爷
                 unit.actor.city.removeLeader();
+                unit.actor.CallMethod("setProfession",UnitProfession.Unit);
+                Debug.Log("是侯爷");
             }
 
         }
@@ -456,27 +460,32 @@ namespace BarrageGame
             if(player.kingdomCivId == null || player.isKingPlayer == false)
             {
                 // 没有控制的国家
+                Debug.Log("没有控制的国家");
                 return;
             }
             if(comm.Count < 2)
             {
                 // 命令错误
+                Debug.Log("命令错误");
                 return;
             }
             var unit = UnitManager.instance.GetByUnitId(comm[1]);
             if(unit == null)
             {
+                Debug.Log("unit == null");
                 return;
             }
             var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
             if(mKingdom.kingdom != unit.actor.kingdom)
             {
                 // 不是一个国家的，没权利提升
+                Debug.Log("不是一个国家的，没权利提升");
                 return;
             }
             if(unit.actor.kingdom.king == unit.actor)
             {
                 // 他也是国王，你没权力
+                Debug.Log("他也是国王，你没权力");
                 return;
             }
 
@@ -487,6 +496,7 @@ namespace BarrageGame
             if(unitGroup != null && unitGroup.groupLeader == unit.actor)
             {
                 // 是武将
+                Debug.Log("是武将"+ GameHelper.CityThings.GetID(unit.actor.city));
                 return;
             }
             // 检查是不是侯爷
@@ -494,6 +504,8 @@ namespace BarrageGame
             {
                 // 是侯爷
                 unit.actor.city.removeLeader();
+                unit.actor.CallMethod("setProfession",UnitProfession.Unit);
+                Debug.Log("是侯爷"+ GameHelper.CityThings.GetID(unit.actor.city));
             }
 
             List<City> allCity = new List<City>();
@@ -507,13 +519,20 @@ namespace BarrageGame
             if(allCity.Count <= 0)
             {
                 // 没有城市了
+                Debug.Log("没有城市了");
                 return;
             }
             // TODO 任命战斗队长
             City targetCity = allCity[UnityEngine.Random.Range(0,allCity.Count)];
             unit.actor.CallMethod("becomeCitizen",targetCity);
-            targetCity.army.CallMethod("setGroupLeader",unit.actor);
+            if(targetCity.army != null)
+            {
+                targetCity.army.addUnit(unit.actor);
+                targetCity.army.CallMethod("setGroupLeader",unit.actor);
+                unit.actor.CallMethod("setProfession",UnitProfession.Warrior);
+            }
             unit.GoTo(targetCity.getTile());
+            Debug.Log("任命完成"+ GameHelper.CityThings.GetID(unit.actor.city));
         }
 
         // 提升为侯爷
@@ -522,27 +541,32 @@ namespace BarrageGame
             if(player.kingdomCivId == null || player.isKingPlayer == false)
             {
                 // 没有控制的国家
+                Debug.Log("没有控制的国家");
                 return;
             }
             if(comm.Count < 2)
             {
                 // 命令错误
+                Debug.Log("命令错误");
                 return;
             }
             var unit = UnitManager.instance.GetByUnitId(comm[1]);
             if(unit == null)
             {
+                Debug.Log("unit == null");
                 return;
             }
             var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
             if(mKingdom.kingdom != unit.actor.kingdom)
             {
                 // 不是一个国家的，没权利提升
+                Debug.Log("不是一个国家的，没权利提升");
                 return;
             }
             if(unit.actor.kingdom.king == unit.actor)
             {
                 // 他也是国王，你没权力
+                Debug.Log("他也是国王，你没权力");
                 return;
             }
 
@@ -553,12 +577,15 @@ namespace BarrageGame
             if(unitGroup != null && unitGroup.groupLeader == unit.actor)
             {
                 // 是武将
-                unitGroup.CallMethod("setGroupLeader",null);
+                unitGroup.CallMethod("setGroupLeader",(Actor)null);
+                unitGroup.removeUnit(unit.actor);
+                Debug.Log("是武将" + GameHelper.CityThings.GetID(unit.actor.city));
             }
             // 检查是不是侯爷
             if(unit.actor.city.leader == unit.actor)
             {
                 // 是侯爷
+                Debug.Log("是侯爷"+ GameHelper.CityThings.GetID(unit.actor.city));
                 return;
             }
 
@@ -573,6 +600,7 @@ namespace BarrageGame
             if(allCity.Count <= 0)
             {
                 // 没有城市了
+                Debug.Log("没有城市了");
                 return;
             }
             // TODO 任命侯爷
@@ -580,6 +608,7 @@ namespace BarrageGame
             unit.actor.CallMethod("becomeCitizen",targetCity);
             City.makeLeader(unit.actor, targetCity);
             unit.GoTo(targetCity.getTile());
+            Debug.Log("任命完成"+ GameHelper.CityThings.GetID(unit.actor.city));
         }
 
         // 投靠
@@ -587,11 +616,13 @@ namespace BarrageGame
         {
             if(player.unitId == null)
             {
+                Debug.Log("unitId == null");
                 return;
             }
             if(comm.Count < 2)
             {
                 // 命令错误
+                Debug.Log("命令错误");
                 return;
             }
             
@@ -599,11 +630,13 @@ namespace BarrageGame
             var currentMKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
             if(mKingdom == null || currentMKingdom == null)
             {
+                Debug.Log("mKingdom == null");
                 return;
             }
             var unit = UnitManager.instance.GetByKey(player.unitId);
             if(unit == null)
             {
+                Debug.Log("unit == null");
                 return;
             }
 
@@ -613,7 +646,8 @@ namespace BarrageGame
             if(unitGroup != null && unitGroup.groupLeader == unit.actor)
             {
                 // 是武将
-                unitGroup.CallMethod("setGroupLeader",null);
+                unitGroup.CallMethod("setGroupLeader",(Actor)null);
+                unitGroup.removeUnit(unit.actor);
             }
 
             // 检查是不是侯爷 或 国王
@@ -624,6 +658,8 @@ namespace BarrageGame
                 // 也可能是国王
                 // 将这块地一起送给投靠的国家
                 unit.actor.city.joinAnotherKingdom(mKingdom.kingdom);
+                player.kingdomCivId = mKingdom.id;
+                Debug.Log("投靠完成");
                 return;
             }else{
                 // 一个普普通通的人
@@ -631,12 +667,15 @@ namespace BarrageGame
                 if(mKingdom.kingdom.cities.Count <= 0)
                 {
                     // 没有城市了
+                    Debug.Log("没有城市了");
                     return;
                 }
                 // TODO 投靠其他国家
                 City targetCity = mKingdom.kingdom.cities[UnityEngine.Random.Range(0,mKingdom.kingdom.cities.Count)];
                 unit.actor.CallMethod("becomeCitizen",targetCity);
                 unit.GoTo(targetCity.getTile());
+                player.kingdomCivId = mKingdom.id;
+                Debug.Log("投靠完成");
             }
         }
     }

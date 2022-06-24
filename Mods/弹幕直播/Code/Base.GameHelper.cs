@@ -185,11 +185,28 @@ namespace BarrageGame
                 {
                     return false;
                 }
-                if(city.army.groupLeader != null && city.army.groupLeader == true)
+                if(city.army != null && city.army.groupLeader != null && ActorThings.IsPlayer(city.army.groupLeader) == true)
                 {
                     return false;
                 }
                 return true;
+            }
+
+            public static bool IsPlayerControl(City city)
+            {
+                if(city.leader != null && ActorThings.IsPlayer(city.leader) == true)
+                {
+                    return true;
+                }
+                if(city.army != null && city.army.groupLeader != null && ActorThings.IsPlayer(city.army.groupLeader) == true)
+                {
+                    return true;
+                }
+                return false;
+            }
+            public static string GetID(City city)
+            {
+                return ((CityData)Reflection.GetField(city.GetType(),city,"data")).cityID;
             }
         }
 
