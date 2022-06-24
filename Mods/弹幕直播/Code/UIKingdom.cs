@@ -10,6 +10,7 @@ public class UIKingdom
 
     public Image image;
     public Text name;
+    public Text cityNumber;
     public Text score;
     public Text kDA;
 
@@ -85,6 +86,20 @@ public class UIKingdom
             rect.sizeDelta = new Vector2(100, 32);
             rect.pivot = new Vector2(0f, 0.5f);
 
+            go = new GameObject("CityNumber");
+            go.transform.SetParent(kingdomItem.transform);
+            cityNumber = go.AddComponent<Text>();
+            cityNumber.font = Font.CreateDynamicFontFromOSFont("Arial", 14);
+            cityNumber.alignment = TextAnchor.MiddleCenter;
+            cityNumber.color = Color.black;
+            cityNumber.text = "CityNumber";
+            rect = go.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(1, 0.5f);
+            rect.anchorMax = new Vector2(1, 0.5f);
+            rect.anchoredPosition = new Vector2(-220, 0);
+            rect.sizeDelta = new Vector2(60, 32);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+
             go = new GameObject("Score");
             go.transform.SetParent(kingdomItem.transform);
             score = go.AddComponent<Text>();
@@ -95,7 +110,7 @@ public class UIKingdom
             rect = go.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(1, 0.5f);
             rect.anchorMax = new Vector2(1, 0.5f);
-            rect.anchoredPosition = new Vector2(-177, 0);
+            rect.anchoredPosition = new Vector2(-140, 0);
             rect.sizeDelta = new Vector2(84, 32);
             rect.pivot = new Vector2(0.5f, 0.5f);
 

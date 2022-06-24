@@ -93,7 +93,7 @@ public class UIUnit
             rect = go.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(0.5f, 0.5f);
             rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(23, 0);
+            rect.anchoredPosition = new Vector2(40, 0);
             rect.sizeDelta = new Vector2(62, 32);
             rect.pivot = new Vector2(0.5f, 0.5f);
 
@@ -108,11 +108,9 @@ public class UIUnit
             rect.anchorMin = new Vector2(1, 0.5f);
             rect.anchorMax = new Vector2(1, 0.5f);
             rect.anchoredPosition = new Vector2(0, 0);
-            rect.sizeDelta = new Vector2(120, 32);
+            rect.sizeDelta = new Vector2(100, 32);
             rect.pivot = new Vector2(1f, 0.5f);
         }
     }
-
-
 
 }

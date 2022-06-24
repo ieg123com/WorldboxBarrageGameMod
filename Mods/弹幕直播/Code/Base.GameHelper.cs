@@ -191,7 +191,7 @@ namespace BarrageGame
                 }
                 return true;
             }
-
+            // 这个城市被玩家控制
             public static bool IsPlayerControl(City city)
             {
                 if(city.leader != null && ActorThings.IsPlayer(city.leader) == true)
@@ -204,10 +204,34 @@ namespace BarrageGame
                 }
                 return false;
             }
+            // 获取城市id
             public static string GetID(City city)
             {
                 return ((CityData)Reflection.GetField(city.GetType(),city,"data")).cityID;
             }
+            // 获取最近的城市
+            public static City GetShotestDistance(List<City> allCity,WorldTile worldTile)
+            {
+                City retCity = null;
+                WorldTile cityTile = null;
+                foreach (City city2 in  allCity)
+                {
+                    var _city2Tile = Reflection.GetField(city2.GetType(),city2,"_cityTile") as WorldTile;
+                    if(cityTile == null)
+                    {
+                        cityTile = _city2Tile;
+                        retCity = city2;
+                        continue;
+                    }
+                    if (_city2Tile == null || Toolbox.DistVec2(worldTile.pos, _city2Tile.pos) < Toolbox.DistVec2(worldTile.pos, cityTile.pos))
+                    {
+                        cityTile = _city2Tile;
+                        retCity = city2;
+                    }
+                }
+                return retCity;
+            }
+
         }
 
         public class ActorThings

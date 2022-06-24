@@ -257,6 +257,8 @@ namespace BarrageGame
                 unit.uIUnit = mKingdom.uIKingdom.GetUIUnit();
                 unit.ReflectionUIUnit();
             }
+            unit.uIBloodBar = UIBloodBar.Create(MapNamesManager.instance.transform);
+            unit.uIBloodBar.RefreshDisplay();
         }
 
         static public void MsgToAttack(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
@@ -650,33 +652,41 @@ namespace BarrageGame
                 unitGroup.removeUnit(unit.actor);
             }
 
-            // 检查是不是侯爷 或 国王
-            if(unit.actor.city.leader == unit.actor || 
-            unit.actor.kingdom.king == unit.actor)
-            {
-                // 是侯爷
-                // 也可能是国王
-                // 将这块地一起送给投靠的国家
-                unit.actor.city.joinAnotherKingdom(mKingdom.kingdom);
-                player.kingdomCivId = mKingdom.id;
-                Debug.Log("投靠完成");
-                return;
-            }else{
-                // 一个普普通通的人
 
-                if(mKingdom.kingdom.cities.Count <= 0)
+            try{
+                unit.changeKingdom = true;
+                // 检查是不是侯爷 或 国王
+                if(unit.actor.city.leader == unit.actor || 
+                unit.actor.kingdom.king == unit.actor)
                 {
-                    // 没有城市了
-                    Debug.Log("没有城市了");
+                    // 是侯爷
+                    // 也可能是国王
+                    // 将这块地一起送给投靠的国家
+                    unit.actor.city.joinAnotherKingdom(mKingdom.kingdom);
+                    player.kingdomCivId = mKingdom.id;
+                    Debug.Log("投靠完成");
                     return;
+                }else{
+                    // 一个普普通通的人
+
+                    if(mKingdom.kingdom.cities.Count <= 0)
+                    {
+                        // 没有城市了
+                        Debug.Log("没有城市了");
+                        return;
+                    }
+                    // TODO 投靠其他国家
+                    City targetCity = mKingdom.kingdom.cities[UnityEngine.Random.Range(0,mKingdom.kingdom.cities.Count)];
+                    unit.actor.CallMethod("becomeCitizen",targetCity);
+                    unit.GoTo(targetCity.getTile());
+                    player.kingdomCivId = mKingdom.id;
+                    Debug.Log("投靠完成");
                 }
-                // TODO 投靠其他国家
-                City targetCity = mKingdom.kingdom.cities[UnityEngine.Random.Range(0,mKingdom.kingdom.cities.Count)];
-                unit.actor.CallMethod("becomeCitizen",targetCity);
-                unit.GoTo(targetCity.getTile());
-                player.kingdomCivId = mKingdom.id;
-                Debug.Log("投靠完成");
             }
+            finally{
+                unit.changeKingdom = false;
+            }
+            
         }
     }
 

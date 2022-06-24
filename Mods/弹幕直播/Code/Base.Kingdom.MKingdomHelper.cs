@@ -128,6 +128,8 @@ namespace BarrageGame
             {
                 return;
             }
+
+
             // 更新 unit 所属的国家
             {
                 // 先清除ui
@@ -173,6 +175,23 @@ namespace BarrageGame
 
             }
 
+
+            // 国家亡，永不背叛
+            if(unit.changeKingdom == false){
+                // TODO 检查原来的国家是否灭亡
+                if(oldKingdom.cities.Count > 0)
+                {
+                    // 还有城市
+                    var targetCity = GameHelper.CityThings.GetShotestDistance(oldKingdom.cities,unit.actor.currentTile);
+                    try{
+                        unit.changeKingdom = true;
+                        unit.actor.CallMethod("becomeCitizen",targetCity);
+                    }finally{
+                        unit.changeKingdom = false;
+                    }
+                }
+
+            }
         }
 
         static public void ActorBaseUpdataStats(ActorBase pActorBase)
@@ -277,6 +296,11 @@ namespace BarrageGame
                 {
                     mKingdom.uIKingdom.Remove(unit.uIUnit);
                     unit.uIUnit = null;
+                }
+                if(unit.uIBloodBar != null)
+                {
+                    unit.uIBloodBar.Clear();
+                    unit.uIBloodBar = null;
                 }
             }
 

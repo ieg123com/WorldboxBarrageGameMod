@@ -16,6 +16,8 @@ namespace BarrageGame
             unit.Id = actor.GetID();
             unit.unitId = UnitManager.GenerateUnitId();
             unit.actor = actor;
+            unit.actorCurStats = Reflection.GetField(actor.GetType(),actor,"curStats") as BaseStats;
+            unit.actorData = Reflection.GetField(actor.GetType(),actor,"data") as ActorStatus;
             UnitManager.instance.Add(unit);
             Reflection.SetField<bool>(actor, "event_full_heal", true);
             return unit;

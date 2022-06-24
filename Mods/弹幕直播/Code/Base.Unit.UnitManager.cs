@@ -96,5 +96,14 @@ namespace BarrageGame
             }
         }
 
+        public void LateUpdate()
+        {
+            foreach(var unit in allUnit.Values)
+            {
+                unit.LateUpdate();
+            }
+        }
+
+
     }
 }

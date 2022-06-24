@@ -374,7 +374,7 @@ namespace BarrageGame{
 
         void LateUpdate()
         {
-
+            UnitManager.instance.LateUpdate();
             //MKingdomManager.instance.LateUpdate();
             if(sprite)
             {

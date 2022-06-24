@@ -19,7 +19,7 @@ namespace BarrageGame
             MessageDistribute.instance.BindNormalMsgEvent("回防",KingdomMsg.MsgToBackArmy);
             MessageDistribute.instance.BindNormalMsgEvent("投降",KingdomMsg.MsgSurrender);
             MessageDistribute.instance.BindNormalMsgEvent("查看外交",KingdomMsg.MsgToShowDiplomacy);
-            MessageDistribute.instance.BindNormalMsgEvent("罢免",KingdomMsg.MsgFired);
+            MessageDistribute.instance.BindNormalMsgEvent("革职",KingdomMsg.MsgFired);
             MessageDistribute.instance.BindNormalMsgEvent("封将",KingdomMsg.MsgPromotedToGeneral);
             MessageDistribute.instance.BindNormalMsgEvent("封侯",KingdomMsg.MsgPromotedToLeader);
             MessageDistribute.instance.BindNormalMsgEvent("投靠",KingdomMsg.MsgBetray);

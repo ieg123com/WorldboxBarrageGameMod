@@ -57,7 +57,12 @@ namespace BarrageGame
                     uIKingdom.kDA.text = String.Format("{0:F}",(float)player.playerDataInfo.kingdomDataInfo.killNum / (float)player.playerDataInfo.kingdomDataInfo.deathNum);
                 }
             }
-
+            int playerControlCount = 0;
+            foreach(var city in kingdom.cities)
+            {
+                playerControlCount += (GameHelper.CityThings.IsPlayerControl(city) ? 1 : 0);
+            }
+            uIKingdom.cityNumber.text = $"{playerControlCount}/{kingdom.cities.Count}";
         }
 
         public void SetHeadSprite(Sprite head)

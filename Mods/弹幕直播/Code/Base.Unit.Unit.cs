@@ -13,14 +13,24 @@ namespace BarrageGame
     {
         // 圆形通道
         static public Texture2D RoundChannel;
+        // Actor id
         public string Id;
+        // Mod内记录的id
         public string unitId;
         public string unitDataInfo;
+        // 所属 Playerid
         public long ownerPlayerUid = 0;
+        // 改变国家
+        public bool changeKingdom = false;
+        // 圆形头像
         public Sprite head;
+        // object
         public Actor actor;
+        public BaseStats actorCurStats;
+        public ActorStatus actorData;
 
         public UIUnit uIUnit = null;
+        public UIBloodBar uIBloodBar = null;
 
         public void Apply()
         {
@@ -115,6 +125,18 @@ namespace BarrageGame
         public void SecondsUpdate()
         {
             ReflectionUIUnit();
+        }
+
+        public void LateUpdate()
+        {
+            if(uIBloodBar != null)
+            {
+                Vector2 pos = GameHelper.MapText.TransformPosition(actor.currentTile.posV3);
+                uIBloodBar.rootRect.anchoredPosition = pos;
+                uIBloodBar.hpMax = actorCurStats.health;
+                uIBloodBar.hp = actorData.health;
+                uIBloodBar.RefreshDisplay();
+            }
         }
     }
 
