@@ -184,7 +184,7 @@ namespace BarrageGame
             }
             // 是玩家控制的单位
             var curStats = Reflection.GetField(pActorBase.GetType(),pActorBase,"curStats") as BaseStats;
-            curStats.health += 2000;
+            curStats.health += 4000;
             curStats.damage += 10;
         }
 
