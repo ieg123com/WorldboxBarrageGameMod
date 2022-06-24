@@ -164,7 +164,13 @@ namespace BarrageGame
                 if(newMKingdom != null)
                 {
                     newMKingdom.AddUnit(unit);
+                    var player = PlayerManager.instance.GetByKey(unit.ownerPlayerUid);
+                    if(player != null)
+                    {
+                        player.kingdomCivId = newMKingdom.id;
+                    }
                 }
+
             }
 
         }
