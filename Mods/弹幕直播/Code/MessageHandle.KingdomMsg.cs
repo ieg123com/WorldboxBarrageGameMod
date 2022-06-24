@@ -76,10 +76,10 @@ namespace BarrageGame
                 mKingdom = MKingdomManager.instance.GetByKey($"k_{comm[1]}");
             }else{
                 int allPopulationTotal = 0;
-                int avPopulationTotal = 0;
+                int avPopulationTotal = 3;
                 {
                     // TODO 获取平均人口
-                    if(MKingdomManager.instance.allKingdoms.Count > 0)
+                    if(MKingdomManager.instance.allKingdoms.Count > 0 && DivideTheWorld.instance.stageType != DivideTheWorld.StageType.A)
                     {
                         foreach(var v in MKingdomManager.instance.allKingdoms.Values)
                         {
@@ -87,6 +87,10 @@ namespace BarrageGame
                         }
                         avPopulationTotal = allPopulationTotal / MKingdomManager.instance.allKingdoms.Count;
                     }
+                }
+                if(player.playerDataInfo.kingdomDataInfo.deathNum+player.playerDataInfo.kingdomDataInfo.winNum <= 10)
+                {
+                    avPopulationTotal += 5;
                 }
                 // TODO 创建国家，并追平其他国家人口
                 var kingdom = GameHelper.KingdomThings.RandomCreate(avPopulationTotal);

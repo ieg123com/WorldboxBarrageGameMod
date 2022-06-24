@@ -25,6 +25,7 @@ namespace BarrageGame
             // C.2倍速到只剩一个国家
             C,
         }
+        static public DivideTheWorld instance;
         // 阶段
         public StageType stageType = StageType.None;
 
@@ -38,6 +39,7 @@ namespace BarrageGame
 
         void Awake()
         {
+            instance = this;
             Debug.Log(">>>>>>>>>>> DivideTheWorld.Awake");
 
         }
@@ -135,8 +137,8 @@ namespace BarrageGame
                 {
                     diffYear =0;
                 }
-                diffYear = (diffYear > 100)?100:diffYear;
-                GameHelper.SetTimeScale(5f + 5f * (diffYear / 100f));
+                diffYear = (diffYear > 200)?200:diffYear;
+                GameHelper.SetTimeScale(5f + 10f * (diffYear / 200f));
                 return;
                 if(MKingdomManager.instance.allKingdoms.Count > 2){
                     // 简易ai

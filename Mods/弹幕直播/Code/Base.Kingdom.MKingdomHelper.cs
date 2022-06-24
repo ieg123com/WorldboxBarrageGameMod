@@ -247,7 +247,7 @@ namespace BarrageGame
             if(player != null)
             {
                 player.playerDataInfo.unitDataInfo.deathNum += 1;
-                attackPlayer.currentUnitDataInfo.deathNum +=1;
+                player.currentUnitDataInfo.deathNum +=1;
                 player.dataChanged = true;
                 unit.ReflectionUIUnit();
             }
