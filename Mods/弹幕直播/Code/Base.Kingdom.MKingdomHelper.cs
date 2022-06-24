@@ -247,7 +247,7 @@ namespace BarrageGame
             if(player != null)
             {
                 player.playerDataInfo.unitDataInfo.deathNum += 1;
-                attackPlayer.currentUnitDataInfo.deathNum +=1;
+                player.currentUnitDataInfo.deathNum +=1;
                 player.dataChanged = true;
                 unit.ReflectionUIUnit();
             }
@@ -387,6 +387,7 @@ namespace BarrageGame
             }
             foreach(var city in self.kingdom.cities)
             {
+                if(GameHelper.CityThings.IsPlayerControl(city))continue;    // 玩家控制的城市，国王无法命令
                 var _cityTile = Reflection.GetField(city.GetType(),city,"_cityTile") as WorldTile;
                 if (city.army != null && _cityTile != null)
                 {
@@ -422,6 +423,8 @@ namespace BarrageGame
         {
             foreach(var city in self.kingdom.cities)
             {
+                if(GameHelper.CityThings.IsPlayerControl(city))continue;    // 玩家控制的城市，国王无法命令
+
                 WorldTile cityTile =  Reflection.GetField(targetKingdom.kingdom.capital.GetType(),targetKingdom.kingdom.capital,"_cityTile") as WorldTile;
                 city.army.moveTo(cityTile);
             }
@@ -435,6 +438,7 @@ namespace BarrageGame
             WorldLog.logNewMessage(kingdom, "召回了它的军队");
             foreach (City city in kingdom.cities)
             {
+                if(GameHelper.CityThings.IsPlayerControl(city))continue;    // 玩家控制的城市，国王无法命令
                 city.army.moveTo(Reflection.GetField(city.GetType(),city,"_cityTile") as WorldTile);
             }
             return true;
