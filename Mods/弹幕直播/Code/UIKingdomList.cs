@@ -64,6 +64,7 @@ public class UIKingdomList : MonoBehaviour
             itemList.Add(item);
         }
         UIKingdom ret = itemList[uiKingdomItemCount];
+        ret.Clear();
         ret.goMain.SetActive(true);
         ++uiKingdomItemCount;
         UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(goContent.GetComponent<RectTransform>());
