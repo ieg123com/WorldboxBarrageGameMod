@@ -32,6 +32,7 @@ namespace BarrageGame
                 if(city.leader == self.actor)
                 {
                     city.army.moveTo(tile);
+                    self.GoTo(tile);
                     return;
                 }
             }
@@ -83,7 +84,8 @@ namespace BarrageGame
         // 移动到国家
         public static void MoveToKingdom(this Unit self,MKingdom targetKingdom)
         {
-            self.MoveTo(Reflection.GetField(targetKingdom.kingdom.capital.GetType(),targetKingdom.kingdom.capital,"_cityTile") as WorldTile);
+            WorldTile cityTile =  Reflection.GetField(targetKingdom.kingdom.capital.GetType(),targetKingdom.kingdom.capital,"_cityTile") as WorldTile;
+            self.MoveTo(cityTile);
         }
 
         // 回防
