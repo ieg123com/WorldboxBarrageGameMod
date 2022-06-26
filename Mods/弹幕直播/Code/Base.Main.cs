@@ -171,6 +171,7 @@ namespace BarrageGame{
                 //Debug.Log($"Config.timeScale {Config.timeScale}");
                 //Debug.Log($"Config.paused {Config.paused}");
                 UnitManager.instance.SecondsUpdate();
+                MKingdomManager.instance.SecondsUpdate();
             }
 
             if(grenadeNum > 0)

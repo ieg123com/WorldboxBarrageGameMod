@@ -93,6 +93,10 @@ namespace BarrageGame
             }
         }
 
+        public void SecondsUpdate()
+        {
+            ReflectionUIKingdom();
+        }
 
 
     }
