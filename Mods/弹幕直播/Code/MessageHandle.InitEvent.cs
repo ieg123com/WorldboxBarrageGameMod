@@ -23,6 +23,8 @@ namespace BarrageGame
             MessageDistribute.instance.BindNormalMsgEvent("封将",KingdomMsg.MsgPromotedToGeneral);
             MessageDistribute.instance.BindNormalMsgEvent("封侯",KingdomMsg.MsgPromotedToLeader);
             MessageDistribute.instance.BindNormalMsgEvent("投靠",KingdomMsg.MsgBetray);
+            MessageDistribute.instance.BindNormalMsgEvent("隐藏战绩",KingdomMsg.MsgHideWarRecord);
+            MessageDistribute.instance.BindNormalMsgEvent("显示战绩",KingdomMsg.MsgShowWarRecord);
         }
     }
 }

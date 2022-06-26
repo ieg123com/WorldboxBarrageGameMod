@@ -47,6 +47,13 @@ namespace BarrageGame
         [JsonProperty("deathNum")]
         public long deathNum = 0;
     }
+    // 基础配置信息存档
+    public class ConfigInfo
+    {
+        // 隐藏战绩
+        [JsonProperty("ShowWarRecord")]
+        public bool hideWarRecord = false;
+    }
     // 玩家存档
     public class PlayerDataInfo
     {
@@ -56,6 +63,8 @@ namespace BarrageGame
         public KingdomDataInfo kingdomDataInfo = new KingdomDataInfo();
         [JsonProperty("unitDataInfo")]
         public UnitDataInfo unitDataInfo = new UnitDataInfo();
+        [JsonProperty("configInfo")]
+        public ConfigInfo configInfo = new ConfigInfo();
     }
 
 

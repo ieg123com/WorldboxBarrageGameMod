@@ -48,6 +48,13 @@ namespace BarrageGame
                 }
                 uIKingdom.image.sprite = player.headSprite;
                 uIKingdom.name.text = $"[{id.Substring(2)}]{player.name}";
+                if(player.playerDataInfo.configInfo.hideWarRecord == true)
+                {
+                    // 隐藏战绩显示
+                    uIKingdom.score.text = $"-/-/-";
+                    uIKingdom.kDA.text = "-.--";
+                    return;
+                }
                 uIKingdom.score.text = $"{player.playerDataInfo.kingdomDataInfo.killNum}/{player.playerDataInfo.kingdomDataInfo.deathNum}/{player.playerDataInfo.kingdomDataInfo.winNum}";
                 if(player.playerDataInfo.kingdomDataInfo.deathNum <= 0)
                 {

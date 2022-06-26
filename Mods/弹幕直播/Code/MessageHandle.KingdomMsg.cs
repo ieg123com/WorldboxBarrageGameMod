@@ -688,6 +688,43 @@ namespace BarrageGame
             }
             
         }
+
+        // 显示战绩
+        static public void MsgShowWarRecord(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
+        {
+            player.playerDataInfo.configInfo.hideWarRecord = false;
+            player.dataChanged = true;
+            if(player.isKingPlayer == false)
+            {
+                // 不需要刷新显示
+                return;
+            }
+            var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+            if(mKingdom == null)
+            {
+                return;
+            }
+            mKingdom.ReflectionUIKingdom();
+        }
+
+        // 隐藏战绩
+        static public void MsgHideWarRecord(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
+        {
+            player.playerDataInfo.configInfo.hideWarRecord = true;
+            player.dataChanged = true;
+            if(player.isKingPlayer == false)
+            {
+                // 不需要刷新显示
+                return;
+            }
+            var mKingdom = MKingdomManager.instance.GetByKey(player.kingdomCivId);
+            if(mKingdom == null)
+            {
+                return;
+            }
+            mKingdom.ReflectionUIKingdom();
+        }
+
     }
 
 
