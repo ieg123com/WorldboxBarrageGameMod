@@ -13,6 +13,7 @@ namespace BarrageGame
         {
             var actor = GameHelper.spawnUnit(pTile,pPowerID);
             var unit = new Unit();
+            actor.isPlayerControl = true;
             unit.Id = actor.GetID();
             unit.unitId = UnitManager.GenerateUnitId();
             unit.actor = actor;

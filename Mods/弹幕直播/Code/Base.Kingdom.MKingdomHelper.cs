@@ -10,6 +10,10 @@ namespace BarrageGame
 {
     static public class MKingdomHelper
     {
+        //static public Color colorHit = new Color(0.99f,0.31f,0.29f,1f);
+        //static public Color colorAttack = new Color(0.93f,0.77f,0.51f,1f);
+        static public Color colorAttack = new Color(0.99f,0.31f,0.29f,1f);
+        
         static public void Init()
         {
             // 绑定所有城市
@@ -34,6 +38,7 @@ namespace BarrageGame
             ModEvent.actorKingdomChanged = new Action<Actor,Kingdom,Kingdom>(ActorKingdomChanged);
             // ActorBase 属性更新
             ModEvent.actorBaseUpdataStats = new Action<ActorBase>(ActorBaseUpdataStats);
+            ModEvent.actorGetHit = new Action<Actor, float, bool, AttackType, BaseSimObject, bool>(Event_ActorGetHit);
         }
 
 
@@ -123,6 +128,7 @@ namespace BarrageGame
                 return;
             }
 
+            if(actor.isPlayerControl == false)return;// 不是玩家控制的
             var unit = UnitManager.instance.GetByKey(actor.GetID());
             if(unit == null)
             {
@@ -196,6 +202,7 @@ namespace BarrageGame
 
         static public void ActorBaseUpdataStats(ActorBase pActorBase)
         {
+            if(pActorBase.isPlayerControl == false)return;// 不是玩家控制的
             var unit = UnitManager.instance.GetByKey(pActorBase.GetID());
             if(unit == null)
             {
@@ -261,7 +268,7 @@ namespace BarrageGame
                 
             }
 
-
+            if(pActor.isPlayerControl == false)return;// 不是玩家控制的
             var unit = UnitManager.instance.GetByKey(pActor.GetID());
             if(unit == null)
             {
@@ -283,6 +290,7 @@ namespace BarrageGame
 
         static public void DestroyActor(Actor pActor)
         {
+            if(pActor.isPlayerControl == false)return;// 不是玩家控制的
             var unit = UnitManager.instance.GetByKey(pActor.GetID());
             if(unit == null)
             {
@@ -322,6 +330,16 @@ namespace BarrageGame
  
             }
             UnitManager.instance.Remove(unit.Id);
+        }
+
+        static public void Event_ActorGetHit(Actor self,float pDamage, bool pFlash = true, AttackType pType = AttackType.Other, BaseSimObject pAttacker = null, bool pSkipIfShake = true)
+        {
+            if(pAttacker != null && pAttacker.isPlayerControl == true)
+            {
+                // 玩家攻击的
+                Vector2 pos = GameHelper.MapText.TransformPosition(self.currentTile.posV3);
+                UIDamageManager.instance.Show(((int)pDamage).ToString(),colorAttack,pos);
+            }
         }
 
 

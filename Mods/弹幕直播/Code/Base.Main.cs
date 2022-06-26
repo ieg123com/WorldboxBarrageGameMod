@@ -122,6 +122,8 @@ namespace BarrageGame{
         {
             GameHelper.LoadMapStore(UnityEngine.Random.Range(1,20));
             MapNamesManager.instance.gameObject.AddComponent<UIKingdomList>().RefreshDisplay();
+            MapNamesManager.instance.gameObject.AddComponent<UIDamageManager>();
+
 
         }
 
@@ -189,6 +191,8 @@ namespace BarrageGame{
         static void SpawnTest()
         {
             MapBox.instance.mapStats.year = 0;
+            MapBox.instance.mapStats.id_kingdom = 0;
+
             //var itemData = new ItemData();
             //itemData.id = "sword";
             //itemData.by = "Nikon";
