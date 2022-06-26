@@ -10,9 +10,10 @@ namespace BarrageGame
 {
     static public class MKingdomHelper
     {
-        static public Color colorHit = new Color(0.99f,0.31f,0.29f,1f);
-        static public Color colorAttack = new Color(0.93f,0.77f,0.51f,1f);
-
+        //static public Color colorHit = new Color(0.99f,0.31f,0.29f,1f);
+        //static public Color colorAttack = new Color(0.93f,0.77f,0.51f,1f);
+        static public Color colorAttack = new Color(0.99f,0.31f,0.29f,1f);
+        
         static public void Init()
         {
             // 绑定所有城市
