@@ -80,7 +80,7 @@ namespace BarrageGame
                 case StageType.A:
                 {
                     aTimer += 1f;
-                    if(aTimer >= 90f)
+                    if(aTimer >= 9f)
                     {
                         stageType = StageType.B;
                         //GameHelper.Paused(false);
@@ -138,7 +138,7 @@ namespace BarrageGame
                     diffYear =0;
                 }
                 diffYear = (diffYear > 200)?200:diffYear;
-                GameHelper.SetTimeScale(5f + 10f * (diffYear / 200f));
+                GameHelper.SetTimeScale(5f + 15f * (diffYear / 200f));
                 return;
                 if(MKingdomManager.instance.allKingdoms.Count > 2){
                     // 简易ai
