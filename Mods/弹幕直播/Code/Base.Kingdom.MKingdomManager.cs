@@ -50,6 +50,7 @@ namespace BarrageGame
         {
             foreach(var v in allKingdoms.Values)
             {
+                v.Clear();
                 UnityEngine.Object.Destroy(v.gameObject);
             }
             allKingdoms.Clear();
