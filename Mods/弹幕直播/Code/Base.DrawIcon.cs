@@ -13,7 +13,7 @@ namespace BarrageGame
         public static Color Color_KingdomAttackTarget;
         static public void Init()
         {
-            Color_KingdomAttackTarget = new Color(1f,0f,0f,0.6f);
+            Color_KingdomAttackTarget = new Color(1f,0f,0f,0.7f);
             // 绘制玩家头像
             AssetManager.map_icons.add(new MapIconAsset
             {
@@ -27,7 +27,7 @@ namespace BarrageGame
 
             AssetManager.map_icons.add(new MapIconAsset
             {
-                base_scale = 0.20f,
+                base_scale = 0.25f,
                 id = "arrows_kingdom_attack_targets2",
                 id_prefab = "p_mapArrow_stroke",
                 render_arrow_end = true,
@@ -59,16 +59,20 @@ namespace BarrageGame
                 {
                     continue;
                 }
-                var tileA = Reflection.GetField(mKingdom.capital.GetType(),mKingdom.capital,"_cityTile") as WorldTile;
+                WorldTile tileA = null;
                 foreach(var targetMKingdom in mKingdom.AllKingdomAtWar.Values)
                 {
                     if(targetMKingdom.capital == null)
                     {
                         continue;
                     }
-                    var tileB = Reflection.GetField(targetMKingdom.capital.GetType(),targetMKingdom.capital,"_cityTile") as WorldTile;
                     if(mKingdom.ShowDiplomacyTime > 0.1f || targetMKingdom.ShowDiplomacyTime > 0.1f)
                     {
+                        if(tileA == null)
+                        {
+                            tileA = Reflection.GetField(mKingdom.capital.GetType(),mKingdom.capital,"_cityTile") as WorldTile;
+                        }
+                        var tileB = Reflection.GetField(targetMKingdom.capital.GetType(),targetMKingdom.capital,"_cityTile") as WorldTile;
                         MapIconLibrary.drawArrowMark(pAsset, tileA.posV3, tileB.posV3, ref Color_KingdomAttackTarget, null);
                     }
 
