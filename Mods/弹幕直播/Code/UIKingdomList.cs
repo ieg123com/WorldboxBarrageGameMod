@@ -11,6 +11,7 @@ public class UIKingdomList : MonoBehaviour
     public GameObject goContent;
 
     public List<UIKingdom> itemList = new List<UIKingdom>();
+    public List<UIKingdom> itemLastList = new List<UIKingdom>();
 
     private int uiKingdomItemCount = 0;
 
@@ -65,6 +66,7 @@ public class UIKingdomList : MonoBehaviour
         }
         UIKingdom ret = itemList[uiKingdomItemCount];
         ret.Clear();
+        ret.goMain.transform.SetSiblingIndex(uiKingdomItemCount);
         ret.goMain.SetActive(true);
         ++uiKingdomItemCount;
         UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(goContent.GetComponent<RectTransform>());
@@ -80,10 +82,23 @@ public class UIKingdomList : MonoBehaviour
         }
         itemList.Remove(ui);
         ui.goMain.SetActive(false);
-        ui.goMain.transform.SetParent(null);
-        ui.goMain.transform.SetParent(goContent.transform);
+        ui.goMain.transform.SetAsLastSibling();
         itemList.Add(ui);
         --uiKingdomItemCount;
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(goContent.GetComponent<RectTransform>());
+        ForceRebuildLayout();
+    }
+
+    public void SetLastUIKingdom(UIKingdom ui)
+    {
+        if (ui.goMain.transform.parent != goContent.transform)
+        {
+            return;
+        }
+        itemList.Remove(ui);
+        --uiKingdomItemCount;
+        ui.goMain.transform.SetSiblingIndex(uiKingdomItemCount);
+        itemLastList.Add(ui);
         UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(goContent.GetComponent<RectTransform>());
         ForceRebuildLayout();
     }
@@ -95,6 +110,12 @@ public class UIKingdomList : MonoBehaviour
         {
             item.goMain.SetActive(false);
         }
+        foreach (var item in itemLastList)
+        {
+            item.goMain.SetActive(false);
+            itemList.Add(item);
+        }
+        itemLastList.Clear();
         uiKingdomItemCount = 0;
     }
 

@@ -152,6 +152,15 @@ namespace BarrageGame
             }
         }
 
+        public void SetLastUIKingdom()
+        {
+            if(uIKingdom != null)
+            {
+                UIKingdomList.instance.SetLastUIKingdom(uIKingdom);
+                uIKingdom = null;
+            }
+        }
+
         public void Update()
         {
             if(ShowDiplomacyTime > 0f)

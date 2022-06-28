@@ -97,7 +97,7 @@ namespace BarrageGame
             }
 
             mKingdom.alive = false;
-            mKingdom.RemoveKingdomUI();
+            mKingdom.SetLastUIKingdom();
             mKingdom.Clear();
             UnityEngine.Object.Destroy(mKingdom.gameObject);
             MKingdomManager.instance.Remove(mKingdom.id);
