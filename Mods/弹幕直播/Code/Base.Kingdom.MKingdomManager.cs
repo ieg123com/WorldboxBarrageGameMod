@@ -56,7 +56,13 @@ namespace BarrageGame
             allKingdoms.Clear();
         }
 
-
+        public void SecondsUpdate()
+        {
+            foreach(var v in allKingdoms.Values)
+            {
+                v.SecondsUpdate();
+            }
+        }
 
 
     }

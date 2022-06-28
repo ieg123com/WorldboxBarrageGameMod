@@ -109,6 +109,12 @@ namespace BarrageGame
             }
         }
 
+
+        public void SecondsUpdate()
+        {
+            ReflectionUIKingdom();
+        }
+
         public void Clear()
         {
             if(kingdom != null)
