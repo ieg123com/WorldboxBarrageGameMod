@@ -402,6 +402,7 @@ namespace BarrageGame
                 return;
             }
             PeaceInitiator.ToShowDiplomacy();
+            PeaceInitiator.ShowDiplomacyTime = 5f;
         }
         
         // 罢免官职

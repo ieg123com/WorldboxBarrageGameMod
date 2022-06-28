@@ -67,8 +67,11 @@ namespace BarrageGame
                         continue;
                     }
                     var tileB = Reflection.GetField(targetMKingdom.capital.GetType(),targetMKingdom.capital,"_cityTile") as WorldTile;
+                    if(mKingdom.ShowDiplomacyTime > 0.1f || targetMKingdom.ShowDiplomacyTime > 0.1f)
+                    {
+                        MapIconLibrary.drawArrowMark(pAsset, tileA.posV3, tileB.posV3, ref Color_KingdomAttackTarget, null);
+                    }
 
-                    MapIconLibrary.drawArrowMark(pAsset, tileA.posV3, tileB.posV3, ref Color_KingdomAttackTarget, null);
                 }
             }
         }

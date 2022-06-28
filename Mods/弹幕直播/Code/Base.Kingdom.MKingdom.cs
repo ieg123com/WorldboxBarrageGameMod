@@ -31,6 +31,8 @@ namespace BarrageGame
         // 主动发起开战请求的国家
         public Dictionary<string,MKingdom> AllKingdomAtWar = new Dictionary<string,MKingdom>();
 
+        public float ShowDiplomacyTime = 0f;
+
         public UIKingdom uIKingdom = null;
 
         public void ReflectionUIKingdom()
@@ -144,7 +146,13 @@ namespace BarrageGame
             }
         }
 
-
+        public void Update()
+        {
+            if(ShowDiplomacyTime > 0f)
+            {
+                ShowDiplomacyTime -= Time.deltaTime;
+            }
+        }
 
     }
 
