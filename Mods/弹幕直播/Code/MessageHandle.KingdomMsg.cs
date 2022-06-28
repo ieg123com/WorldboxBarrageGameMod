@@ -252,7 +252,7 @@ namespace BarrageGame
             // TODO 创建UI
             if(mKingdom.uIKingdom == null)
             {
-                // 不是电脑
+                // 是电脑
                 // 创建ui
                 unit.uIUnit = mKingdom.uIKingdom.GetUIUnit();
                 unit.ReflectionUIUnit();

@@ -72,6 +72,22 @@ public class UIKingdomList : MonoBehaviour
         return ret;
     }
 
+    public void RemoveUIKingdom(UIKingdom ui)
+    {
+        if (ui.goMain.transform.parent != goContent.transform)
+        {
+            return;
+        }
+        itemList.Remove(ui);
+        ui.goMain.SetActive(false);
+        ui.goMain.transform.SetParent(null);
+        ui.goMain.transform.SetParent(goContent.transform);
+        itemList.Add(ui);
+        --uiKingdomItemCount;
+        UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(goContent.GetComponent<RectTransform>());
+        ForceRebuildLayout();
+    }
+
 
     public void Clear()
     {

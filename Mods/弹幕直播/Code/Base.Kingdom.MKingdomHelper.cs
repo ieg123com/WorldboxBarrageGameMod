@@ -13,7 +13,7 @@ namespace BarrageGame
         //static public Color colorHit = new Color(0.99f,0.31f,0.29f,1f);
         //static public Color colorAttack = new Color(0.93f,0.77f,0.51f,1f);
         static public Color colorAttack = new Color(0.99f,0.31f,0.29f,1f);
-        
+
         static public void Init()
         {
             // 绑定所有城市
@@ -39,6 +39,8 @@ namespace BarrageGame
             // ActorBase 属性更新
             ModEvent.actorBaseUpdataStats = new Action<ActorBase>(ActorBaseUpdataStats);
             ModEvent.actorGetHit = new Action<Actor, float, bool, AttackType, BaseSimObject, bool>(Event_ActorGetHit);
+            ModEvent.kingdomStartPeace = new Action<Kingdom, Kingdom>(Event_KingdomStartPeace);
+            ModEvent.kingdomStartWar = new Action<Kingdom, Kingdom>(Event_KingdomStartWar);
         }
 
 
@@ -63,10 +65,7 @@ namespace BarrageGame
             }
             
 
-            mKingdom.capital = null;
-            mKingdom.alive = false;
-            UnityEngine.Object.Destroy(mKingdom.gameObject);
-            MKingdomManager.instance.Remove(kingdom.id);
+            
             {
                 // TODO 计分
                 if(kingdomKiller != null)
@@ -84,22 +83,25 @@ namespace BarrageGame
 
             
             var player = PlayerManager.instance.GetByKey(mKingdom.kingPlayerUid);
-            if(player == null)
+            if(player != null)
             {
-                return;
+                {
+                    // TODO 计分
+                    player.playerDataInfo.kingdomDataInfo.deathNum += 1;
+                    player.dataChanged = true;
+                    mKingdom.ReflectionUIKingdom();
+                }
+
+                player.kingdomCivId = "";
+                player.isKingPlayer = false;
             }
 
-            {
-                // TODO 计分
-                player.playerDataInfo.kingdomDataInfo.deathNum += 1;
-                player.dataChanged = true;
-                mKingdom.ReflectionUIKingdom();
-            }
+            mKingdom.alive = false;
+            mKingdom.RemoveKingdomUI();
+            mKingdom.Clear();
+            UnityEngine.Object.Destroy(mKingdom.gameObject);
+            MKingdomManager.instance.Remove(mKingdom.id);
 
-            player.kingdomCivId = "";
-            player.isKingPlayer = false;
-
-            
         }
 
         static public void MakeNewCivKingdom(Kingdom kingdom,City city,Race race,string id)
@@ -342,6 +344,48 @@ namespace BarrageGame
             }
         }
 
+        static public void Event_KingdomStartWar(Kingdom pKingdom,Kingdom pTarget)
+        {
+            if(pKingdom == pTarget)
+            {
+                return;
+            }
+
+            var mKingdom = MKingdomManager.instance.GetByKey(pKingdom.id);
+            var targetMKingdom = MKingdomManager.instance.GetByKey(pTarget.id);
+            if(mKingdom == null || targetMKingdom == null || mKingdom.IsEnemy(targetMKingdom))
+            {
+                return;
+            }
+            if(!mKingdom.AllKingdomAtWar.ContainsKey(targetMKingdom.id))
+            {
+                mKingdom.AllKingdomAtWar.Add(targetMKingdom.id,targetMKingdom);
+            }
+        }
+
+        static public void Event_KingdomStartPeace(Kingdom pKingdom,Kingdom pTarget)
+        {
+            if(pKingdom == pTarget)
+            {
+                return;
+            }
+            var mKingdom = MKingdomManager.instance.GetByKey(pKingdom.id);
+            var targetMKingdom = MKingdomManager.instance.GetByKey(pTarget.id);
+            if(mKingdom == null || targetMKingdom == null || !mKingdom.IsEnemy(targetMKingdom))
+            {
+                return;
+            }
+            if(mKingdom.AllKingdomAtWar.ContainsKey(targetMKingdom.id))
+            {
+                mKingdom.AllKingdomAtWar.Remove(targetMKingdom.id);
+            }
+            if(targetMKingdom.AllKingdomAtWar.ContainsKey(mKingdom.id))
+            {
+                targetMKingdom.AllKingdomAtWar.Remove(mKingdom.id);
+            }
+
+        }
+
 
         static public void CheckNewKingdom()
         {
@@ -372,7 +416,6 @@ namespace BarrageGame
         static public void StartWar(this MKingdom self,MKingdom mKingdom)
         {
             MapBox.instance.kingdoms.diplomacyManager.CallMethod("startWar", self.kingdom, mKingdom.kingdom,false);
-
         }
 
         // 是敌对的

@@ -1,7 +1,11 @@
 using System;
+using System.IO;
+using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using NCMS;
 using NCMS.Utils;
 
@@ -23,6 +27,9 @@ namespace BarrageGame
 
         // 国家中，拥有的全部玩家 unit
         public Dictionary<string,Unit> allUnit = new Dictionary<string,Unit>();
+
+        // 主动发起开战请求的国家
+        public Dictionary<string,MKingdom> AllKingdomAtWar = new Dictionary<string,MKingdom>();
 
         public UIKingdom uIKingdom = null;
 
@@ -100,10 +107,49 @@ namespace BarrageGame
             }
         }
 
+
         public void SecondsUpdate()
         {
             ReflectionUIKingdom();
         }
+
+        public void Clear()
+        {
+            if(kingdom != null)
+            {
+                // 清除其他MKingdom中的开战状态
+                foreach(var kv in kingdom.getEnemies())
+                {
+                    if(kv.Value == true)
+                    {
+                        // 正在开战中
+                        var target = MKingdomManager.instance.GetByKey(kv.Key.id);
+                        if(target != null)
+                        {
+                            if(target.AllKingdomAtWar.ContainsKey(id))
+                            {
+                                target.AllKingdomAtWar.Remove(id);
+                            }
+                        }
+                    }
+                }
+            }
+            AllKingdomAtWar.Clear();
+
+            kingdom = null;
+            capital = null;
+            uIKingdom = null;
+        }
+
+        public void RemoveKingdomUI()
+        {
+            if(uIKingdom != null)
+            {
+                UIKingdomList.instance.RemoveUIKingdom(uIKingdom);
+                uIKingdom = null;
+            }
+        }
+
 
 
     }
