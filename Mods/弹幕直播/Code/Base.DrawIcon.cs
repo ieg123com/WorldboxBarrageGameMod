@@ -45,7 +45,7 @@ namespace BarrageGame
             {
                 if(unit.head != null)
                 {
-                    MapMark mapMark = MapIconLibrary.drawMark(pAsset,unit.actor.currentTile, null, null, null, null);
+                    MapMark mapMark = MapIconLibrary.drawMark(pAsset,unit.actor.currentPosition, null, null, null, null);
                     mapMark.spriteRenderer.sprite = unit.head;
                 }
             }

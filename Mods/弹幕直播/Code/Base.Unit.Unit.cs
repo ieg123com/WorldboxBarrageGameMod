@@ -131,7 +131,8 @@ namespace BarrageGame
         {
             if(uIBloodBar != null)
             {
-                Vector2 pos = GameHelper.MapText.TransformPosition(actor.currentTile.posV3);
+                //Vector2 pos = GameHelper.MapText.TransformPosition(actor.currentTile.posV3);
+                Vector2 pos = GameHelper.MapText.TransformPosition(actor.currentPosition);
                 uIBloodBar.rootRect.anchoredPosition = pos;
                 uIBloodBar.hpMax = actorCurStats.health;
                 uIBloodBar.hp = actorData.health;
