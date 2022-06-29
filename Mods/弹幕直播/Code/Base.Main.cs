@@ -259,35 +259,7 @@ namespace BarrageGame{
 
 
             return;
-            Camera.main.transform.position = new Vector3(){
-                x=MapBox.width/2f,
-                y=MapBox.height/2f
-            };
 
-            var moveCamera = Camera.main.GetComponent<MoveCamera>();
-            Camera.main.orthographicSize = MapBox.width/2f;
-            Debug.Log($"width:{MapBox.width},height:{MapBox.height} | {Camera.main.orthographicSize}");
-            Reflection.SetField<float>(moveCamera, "targetZoom", Camera.main.orthographicSize);
-            Reflection.SetField<float>(moveCamera, "focusZoom", Camera.main.orthographicSize);
-            Reflection.SetField<float>(moveCamera, "focusUnitZoom", Camera.main.orthographicSize);
-            Debug.Log($"ScrollWindow.currentWindows {ScrollWindow.currentWindows.Count}");
-            foreach(var (k,v) in  ScrollWindow.allWindows)
-            {
-                Debug.Log($"Windows: {k}={v.screen_id}");
-            }
-            GameObjects.FindEvenInactive("BottomElements").SetActive(false);
-            
-            //PowerButtonSelector.instance.sizeButtMover.setVisible(false, false);
-            //PowerButtonSelector.instance.cancelButtMover.setVisible(false, false);
-            //PowerButtonSelector.instance.bottomElementsMover.setVisible(false, false);
-            //ScrollWindow.moveAllToLeftAndRemove(true);
-            //NCMS.Utils.Windows.AllWindows["aboutPowerBox"].show(null, "right", "right", false);
-           //NCMS.Utils.Windows.AllWindows["aboutPowerBox"].setActive(true, "right", null, "right", true);
-            //ScrollWindow.addCurrentWindow(NCMS.Utils.Windows.AllWindows["aboutPowerBox"]);
-            //grenadeNum+=100;
-            //WorldTip.hideNow();
-		    //Tooltip.hideTooltip();
-            //Reflection.SetField<bool>(drop, "ScrollWindow._isWindowActive", true);
         }
 
         static void exampleMethod(){
