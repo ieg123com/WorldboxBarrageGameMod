@@ -109,8 +109,7 @@ namespace BarrageGame
                 break;
                 default:
                 {
-                    var unitGroup = Reflection.GetField(actor.GetType(),actor,"unitGroup") as UnitGroup;
-                    if(unitGroup != null && unitGroup.groupLeader == actor)
+                    if(actor.isGroupLeader == true)
                     {
                         uIUnit.jobImage.sprite = SpriteManager.map_mark_flag;
                         uIUnit.jobImage.color = Color.white;

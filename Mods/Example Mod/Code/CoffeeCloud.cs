@@ -63,7 +63,7 @@ namespace ExampleMod
                 NCMS.Utils.PowerTab.Nature,
 
                 // Position of button in this tab. 489.6f by x is the position of snow cloud and + 36 offset. -18 by y means this button will be on second row
-                new Vector2(680.6f + 36, -18));
+                new Vector2(799.2f + 36, -18));
         }
 
         public static bool action_spawnCloud(WorldTile pTile = null, string pPower = "")

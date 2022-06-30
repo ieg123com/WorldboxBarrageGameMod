@@ -441,7 +441,7 @@ namespace BarrageGame
             if(unitGroup != null && unitGroup.groupLeader == unit.actor)
             {
                 // 是武将
-                unitGroup.CallMethod("setGroupLeader",(Actor)null);
+                unitGroup.setGroupLeader((Actor)null);
                 unitGroup.removeUnit(unit.actor);
                 Debug.Log("是武将");
             }
@@ -531,7 +531,8 @@ namespace BarrageGame
             if(targetCity.army != null)
             {
                 targetCity.army.addUnit(unit.actor);
-                targetCity.army.CallMethod("setGroupLeader",unit.actor);
+                targetCity.army.setGroupLeader((Actor)null);
+                targetCity.army.setGroupLeader(unit.actor);
                 unit.actor.CallMethod("setProfession",UnitProfession.Warrior);
             }
             unit.GoTo(targetCity.getTile());
@@ -580,7 +581,7 @@ namespace BarrageGame
             if(unitGroup != null && unitGroup.groupLeader == unit.actor)
             {
                 // 是武将
-                unitGroup.CallMethod("setGroupLeader",(Actor)null);
+                unitGroup.setGroupLeader((Actor)null);
                 unitGroup.removeUnit(unit.actor);
                 Debug.Log("是武将" + GameHelper.CityThings.GetID(unit.actor.city));
             }
@@ -649,7 +650,7 @@ namespace BarrageGame
             if(unitGroup != null && unitGroup.groupLeader == unit.actor)
             {
                 // 是武将
-                unitGroup.CallMethod("setGroupLeader",(Actor)null);
+                unitGroup.setGroupLeader((Actor)null);
                 unitGroup.removeUnit(unit.actor);
             }
 
