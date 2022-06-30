@@ -94,29 +94,24 @@ namespace BarrageGame
             killNum += player.currentUnitDataInfo.killKingNum;
             uIUnit.thisTimeKD.text = $"{killNum}/{player.currentUnitDataInfo.deathNum}";
 
-            ActorStatus actorStatus = Reflection.GetField(actor.GetType(),actor,"data") as ActorStatus;
-            switch(actorStatus.profession)
+            switch(this.GetJobType())
             {
-                case UnitProfession.King:
-                // 国王
-                uIUnit.jobImage.sprite = SpriteManager.iconKings;
-                uIUnit.jobImage.color = Color.white;
+                case UnitJobType.King:
+                    // 国王
+                    uIUnit.jobImage.sprite = SpriteManager.iconKings;
+                    uIUnit.jobImage.color = Color.white;
                 break;
-                case UnitProfession.Leader:
-                // 领袖
-                uIUnit.jobImage.sprite = SpriteManager.iconLeaders;
-                uIUnit.jobImage.color = Color.white;
+                case UnitJobType.Leader:
+                    // 领袖
+                    uIUnit.jobImage.sprite = SpriteManager.iconLeaders;
+                    uIUnit.jobImage.color = Color.white;
+                break;
+                case UnitJobType.GroupLeader:
+                    uIUnit.jobImage.sprite = SpriteManager.map_mark_flag;
+                    uIUnit.jobImage.color = Color.white;
                 break;
                 default:
-                {
-                    if(actor.isGroupLeader == true)
-                    {
-                        uIUnit.jobImage.sprite = SpriteManager.map_mark_flag;
-                        uIUnit.jobImage.color = Color.white;
-                    }else{
-                        uIUnit.jobImage.color = Color.clear;
-                    }
-                }
+                    uIUnit.jobImage.color = Color.clear;
                 break;
             }
         }

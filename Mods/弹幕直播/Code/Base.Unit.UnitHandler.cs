@@ -8,8 +8,41 @@ using ReflectionUtility;
 
 namespace BarrageGame
 {
+    public enum UnitJobType
+    {
+        None,
+        King,   // 国王
+        Leader, // 侯爵
+        GroupLeader,    // 队长
+    }
+
     public static class UnitHandler
     {
+        public static UnitJobType GetJobType(this Unit self)
+        {
+            ActorStatus actorStatus = Reflection.GetField(self.actor.GetType(),self.actor,"data") as ActorStatus;
+            switch(actorStatus.profession)
+            {
+                case UnitProfession.King:
+                // 国王
+                return UnitJobType.King;
+                case UnitProfession.Leader:
+                // 领袖
+                return UnitJobType.Leader;
+                default:
+                break;
+            }
+
+            var unitGroup = Reflection.GetField(self.actor.GetType(),self.actor,"unitGroup") as UnitGroup;
+            if(unitGroup != null && unitGroup.groupLeader == self.actor)
+            {
+                return UnitJobType.GroupLeader;
+            }
+            return UnitJobType.None;
+        }
+
+
+
         // 自己一个人前往某地
         public static void GoTo(this Unit self,WorldTile tile)
         {

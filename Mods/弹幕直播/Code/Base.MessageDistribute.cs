@@ -42,6 +42,7 @@ namespace BarrageGame
 
         public void DistributeNormalMsg(PlayerInfo info,NormalMsg msg)
         {
+            if(Main.startGame == false) return; // 游戏还没开始
             var player = PlayerFactory.GetOrCreate(info);
             player.lastSpeechTime = TimeHelper.ClientNow();
             if(OnNormalMsg != null)

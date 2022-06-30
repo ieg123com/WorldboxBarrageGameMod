@@ -34,11 +34,11 @@ namespace BarrageGame
                     var uiBubble = go.AddComponent<UIBubble>();
                     uiBubble.SetBottomSprite(Sprites.LoadSprite($"{Mod.Info.Path}/GameResources/bottom.png"));
                     var rect = uiBubble.GetComponent<RectTransform>();
-                    rect.anchoredPosition = mapText.GetComponent<RectTransform>().anchoredPosition + new Vector2(0,10);
-                    Debug.Log($"rect.anchoredPosition = {rect.anchoredPosition}");
+                    Debug.Log($"rect.anchoredPosition = {mapText.GetComponent<RectTransform>().anchoredPosition}");
+                    rect.anchoredPosition = mapText.GetComponent<RectTransform>().anchoredPosition;
                     uiBubble.SetMessage(msg.msg);
-
-                    
+                    uiBubble.SetDown(rect.anchoredPosition.y > 145);
+                    uiBubble.headImage.sprite = SpriteManager.iconKingdom;
                 }
             }
             if(player.unitId != null)
@@ -55,9 +55,22 @@ namespace BarrageGame
                 var uiBubble = go.AddComponent<UIBubble>();
                 uiBubble.SetBottomSprite(Sprites.LoadSprite($"{Mod.Info.Path}/GameResources/bottom.png"));
                 var rect = uiBubble.GetComponent<RectTransform>();
-                rect.anchoredPosition = GameHelper.MapText.TransformPosition(unit.actor.currentTile.posV3)+ new Vector2(0,10);
+                rect.anchoredPosition = GameHelper.MapText.TransformPosition(unit.actor.currentTile.posV3);
                 Debug.Log($"rect.anchoredPosition = {rect.anchoredPosition}");
                 uiBubble.SetMessage(msg.msg);
+                uiBubble.SetDown(rect.anchoredPosition.y > 145);
+                switch(unit.GetJobType())
+                {
+                    case UnitJobType.King:
+                        uiBubble.headImage.sprite = SpriteManager.iconKings;
+                        break;
+                    case UnitJobType.Leader:
+                        uiBubble.headImage.sprite = SpriteManager.iconLeaders;
+                        break;
+                    case UnitJobType.GroupLeader:
+                        uiBubble.headImage.sprite = SpriteManager.map_mark_flag;
+                        break;
+                }
             }
         }
 

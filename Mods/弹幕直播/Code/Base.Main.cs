@@ -192,7 +192,7 @@ namespace BarrageGame{
         {
             MapBox.instance.mapStats.year = 0;
             MapBox.instance.mapStats.id_kingdom = 0;
-
+            return;
             //var itemData = new ItemData();
             //itemData.id = "sword";
             //itemData.by = "Nikon";
@@ -201,6 +201,10 @@ namespace BarrageGame{
             //itemData.modifiers.Add("normal");
             //itemData.modifiers.Add("normal");
             //itemData.modifiers.Add("normal");
+            for(int i=0;i<10;++i)
+            {
+                frameActions.Enqueue(()=>{ GameHelper.KingdomThings.RandomCreate();});
+            }
 
             /*
             var worldTile = MapBox.instance.GetTile(UnityEngine.Random.Range(0,MapBox.width),UnityEngine.Random.Range(0,MapBox.height));

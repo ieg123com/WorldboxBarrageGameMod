@@ -245,6 +245,12 @@ namespace BarrageGame
             }
         }
 
+
+        public class UIThings
+        {
+
+        }
+
     }
 
 
