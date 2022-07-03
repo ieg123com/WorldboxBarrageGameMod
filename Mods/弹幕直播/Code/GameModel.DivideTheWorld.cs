@@ -68,7 +68,12 @@ namespace BarrageGame
 
             }
 
-
+            if(stageType == StageType.B)
+            {
+                UILoading.instance.titleText.text = $"发展时间，禁止开战...(<color=#00c000>{MapBox.instance.mapStats.year}.{MapBox.instance.mapStats.month}/150</color>)";
+                UILoading.instance.load = MapBox.instance.mapStats.year * 12 + MapBox.instance.mapStats.month;
+                UILoading.instance.RefreshDisplay();
+            }
 
         }
 
@@ -90,17 +95,25 @@ namespace BarrageGame
                         }
 
                         GameHelper.SetTimeScale(40f);
+                        UILoading.instance.loadMax = 150 * 12;
+                        UILoading.instance.load = MapBox.instance.mapStats.year * 12;
+                        UILoading.instance.RefreshDisplay();
+                        UILoading.instance.titleDownText.text = "";
+                        UILoading.instance.goMain.SetActive(true);
                     }
                     break;
                 }
                 case StageType.B:
                 {
+                    UILoading.instance.titleText.text = $"发展时间，禁止开战...(<color=#00c000>{MapBox.instance.mapStats.year}.{MapBox.instance.mapStats.month}/150</color>)";
+                    UILoading.instance.titleDownText.text = MapBox.instance.mapStats.description;
                     if(MapBox.instance.mapStats.year >= 150)
                     {
                         stageType = StageType.C;
                         GameHelper.SetTimeScale(5f);
                         // 可以宣战了
                         Main.startWar = true;
+                        UILoading.instance.goMain.SetActive(false);
                         MapBox.instance.addNewText("可以相互宣战了", Toolbox.color_log_good, null);
                     }
                     break;

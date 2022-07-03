@@ -120,11 +120,12 @@ namespace BarrageGame{
 
         void Start()
         {
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,25));
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,24));
             MapNamesManager.instance.gameObject.AddComponent<UIKingdomList>().RefreshDisplay();
             MapNamesManager.instance.gameObject.AddComponent<UIDamageManager>();
-
-
+            CanvasMain.instance.transformWindows.gameObject.AddComponent<UILoading>();
+            UILoading.instance.RefreshDisplay();
+            UILoading.instance.goMain.SetActive(false);
         }
 
         public float tempTime = 0f;
@@ -190,9 +191,9 @@ namespace BarrageGame{
 
         static void SpawnTest()
         {
-            MapBox.instance.mapStats.year = 0;
-            MapBox.instance.mapStats.id_kingdom = 0;
-            return;
+            //MapBox.instance.mapStats.year = 0;
+            //MapBox.instance.mapStats.id_kingdom = 0;
+            //return;
             //var itemData = new ItemData();
             //itemData.id = "sword";
             //itemData.by = "Nikon";

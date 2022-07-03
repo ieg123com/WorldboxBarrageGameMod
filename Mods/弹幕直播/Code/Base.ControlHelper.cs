@@ -37,6 +37,7 @@ namespace BarrageGame
             DebugConfig.setOption(DebugOption.ShowWarriorsCityText,true);
             DebugConfig.setOption(DebugOption.CityFastConstruction,true);
             DebugConfig.setOption(DebugOption.CityFastUpgrades,true);
+            UILoading.instance.goMain.SetActive(false);
             //DebugConfig.setOption(DebugOption.CityUnlimitedHouses,true);
 
 
@@ -67,7 +68,7 @@ namespace BarrageGame
             PlayerManager.instance.Clear();
             MKingdomManager.instance.Clear();
 
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,25));
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,24));
         }
 
 
