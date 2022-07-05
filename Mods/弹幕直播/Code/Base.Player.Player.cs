@@ -15,6 +15,11 @@ namespace BarrageGame
         public long uid;
         public string name;
         public string urlHead;
+        // 粉丝牌
+        public string medal_name = "";
+        public string medal_room_id = "";
+        public int medal_level = 0;
+
     }
 
     // 选择国家游玩信息
@@ -70,7 +75,7 @@ namespace BarrageGame
 
     public class Player : MonoBehaviour
     {
-
+        public static string CurrentMedalRoomId = "25191145";
         public long uid;
         public string name;
         public string urlHead;
@@ -83,6 +88,10 @@ namespace BarrageGame
         public string unitId = null;
 
         public long lastSpeechTime = 0;
+        // 粉丝牌
+        public string medal_name = "";
+        public string medal_room_id = "";
+        public int medal_level = 0;
 
 
         // 玩家存档信息
@@ -96,7 +105,15 @@ namespace BarrageGame
             StartCoroutine(DownloadHeadImage());
         }
 
-
+        // 获取自己粉丝的粉丝牌等级
+        public int GetCurrentMedalLevel()
+        {
+            if(CurrentMedalRoomId != medal_room_id)
+            {
+                return 0;
+            }
+            return medal_level;
+        }
 
 
         

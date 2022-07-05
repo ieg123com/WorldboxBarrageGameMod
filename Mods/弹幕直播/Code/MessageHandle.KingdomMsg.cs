@@ -105,6 +105,11 @@ namespace BarrageGame
                 {
                     avPopulationTotal += 5;
                 }
+                // TODO 粉丝牌，初始人口加成
+                if(player.GetCurrentMedalLevel()>0)
+                {
+                    avPopulationTotal += ((player.GetCurrentMedalLevel()-1)/3) + 1;
+                }
                 // TODO 创建国家，并追平其他国家人口
                 var kingdom = GameHelper.KingdomThings.RandomCreate(avPopulationTotal);
                 if(kingdom == null)
@@ -393,7 +398,7 @@ namespace BarrageGame
             {
                 return;
             }
-            if(MKingdomManager.instance.allKingdoms.Count == 2)
+            if(ControlHelper.CanSurrender() == true)
             {
                 // 只有2人的时候可以投降
                 mKingdom.ToSurrender(targetMKingdom);

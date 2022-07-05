@@ -62,7 +62,7 @@ public class UILoading : MonoBehaviour
             go.transform.SetParent(goMain.transform);
 
             titleText = go.AddComponent<Text>();
-            titleText.font = Font.CreateDynamicFontFromOSFont("Arial", 18);
+            titleText.font = Font.CreateDynamicFontFromOSFont("Arial", 24);
             titleText.alignment = TextAnchor.MiddleCenter;
             titleText.color = Color.white;
             titleText.horizontalOverflow = HorizontalWrapMode.Overflow;
@@ -83,7 +83,7 @@ public class UILoading : MonoBehaviour
             go.transform.SetParent(goMain.transform);
 
             titleDownText = go.AddComponent<Text>();
-            titleDownText.font = Font.CreateDynamicFontFromOSFont("Arial", 18);
+            titleDownText.font = Font.CreateDynamicFontFromOSFont("Arial", 24);
             titleDownText.alignment = TextAnchor.MiddleCenter;
             titleDownText.color = Color.white;
             titleDownText.horizontalOverflow = HorizontalWrapMode.Overflow;

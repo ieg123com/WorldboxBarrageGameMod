@@ -35,10 +35,10 @@ namespace BarrageGame
 
             DebugConfig.setOption(DebugOption.ShowAmountNearArmy,true);
             DebugConfig.setOption(DebugOption.ShowWarriorsCityText,true);
-            DebugConfig.setOption(DebugOption.CityFastConstruction,true);
-            DebugConfig.setOption(DebugOption.CityFastUpgrades,true);
+            //DebugConfig.setOption(DebugOption.CityFastConstruction,true);
+            //DebugConfig.setOption(DebugOption.CityFastUpgrades,true);
+            DebugConfig.setOption(DebugOption.FastCultures,true);
             UILoading.instance.goMain.SetActive(false);
-            //DebugConfig.setOption(DebugOption.CityUnlimitedHouses,true);
 
 
             Main.startGame = true;
@@ -69,6 +69,30 @@ namespace BarrageGame
             MKingdomManager.instance.Clear();
 
             GameHelper.LoadMapStore(UnityEngine.Random.Range(1,24));
+        }
+        // 可以投降
+        static public bool CanSurrender()
+        {
+            if(MKingdomManager.instance.allKingdoms.Count <= 0)
+            {
+                return false;
+            }
+            if(MKingdomManager.instance.allKingdoms.Count == 2)
+            {
+                return true;
+            }
+            int populationTotal = 0;
+            int maxPopulationTotal = 0;
+            foreach(var mKingdom in MKingdomManager.instance.allKingdoms.Values)
+            {
+                populationTotal += mKingdom.kingdom.getPopulationTotal();
+                if(maxPopulationTotal < mKingdom.kingdom.getPopulationTotal())
+                {
+                    maxPopulationTotal = mKingdom.kingdom.getPopulationTotal();
+                }
+            }
+            int ave = populationTotal/2;
+            return (ave < maxPopulationTotal);
         }
 
 

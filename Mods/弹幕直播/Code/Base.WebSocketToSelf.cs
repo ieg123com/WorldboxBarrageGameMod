@@ -32,6 +32,14 @@ namespace BarrageGame
             public string headurl = "";
             [JsonProperty("timestamp")]
             public long timestamp = 0;
+            // 粉丝牌
+            [JsonProperty("medal_name")]
+            public string medal_name = "";
+            [JsonProperty("medal_room_id")]
+            public string medal_room_id = "";
+            [JsonProperty("medal_level")]
+            public string medal_level = "";
+
         }
 
         public class BarrageMsg
@@ -83,6 +91,10 @@ namespace BarrageGame
             info.uid = msgBase.uid;
             info.name = msgBase.uname;
             info.urlHead = msgBase.headurl;
+            info.medal_name = msgBase.medal_name;
+            info.medal_room_id = msgBase.medal_room_id;
+            int.TryParse(msgBase.medal_level,out info.medal_level);
+
 
             switch ((MsgType)msgBase.type)
             {

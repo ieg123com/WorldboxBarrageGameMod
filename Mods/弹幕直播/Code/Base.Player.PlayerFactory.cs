@@ -19,6 +19,9 @@ namespace BarrageGame
             player.uid = info.uid;
             player.name = info.name;
             player.urlHead = info.urlHead;
+            player.medal_name = info.medal_name;
+            player.medal_room_id = info.medal_room_id;
+            player.medal_level = info.medal_level;
             player.headSprite = Sprites.LoadSprite($"{Mod.Info.Path}/icon.png");
 
             // 加载存档
