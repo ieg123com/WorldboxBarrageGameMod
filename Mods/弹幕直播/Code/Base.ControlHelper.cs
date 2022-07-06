@@ -68,7 +68,7 @@ namespace BarrageGame
             PlayerManager.instance.Clear();
             MKingdomManager.instance.Clear();
 
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,24));
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,28));
         }
         // 可以投降
         static public bool CanSurrender()

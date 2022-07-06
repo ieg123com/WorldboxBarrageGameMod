@@ -96,6 +96,7 @@ namespace BarrageGame{
             MessageHandle.InitEvent();
 
             spriteManager.Init();
+            ai.behaviours.Manager.Init();
 
 
 
@@ -120,7 +121,7 @@ namespace BarrageGame{
 
         void Start()
         {
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,24));
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,28));
             MapNamesManager.instance.gameObject.AddComponent<UIKingdomList>().RefreshDisplay();
             MapNamesManager.instance.gameObject.AddComponent<UIDamageManager>();
             CanvasMain.instance.transformWindows.gameObject.AddComponent<UILoading>();

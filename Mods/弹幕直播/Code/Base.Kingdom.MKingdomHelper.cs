@@ -503,7 +503,8 @@ namespace BarrageGame
                     }
                     if (cityTile != null)
                     {
-                        city.army.moveTo(cityTile);
+                        city.target_attack_zone = cityTile.zone;
+                        city.army.MoveToTile(cityTile);
                     }
                 }
             }
@@ -517,7 +518,7 @@ namespace BarrageGame
                 if(GameHelper.CityThings.IsPlayerControl(city))continue;    // 玩家控制的城市，国王无法命令
 
                 WorldTile cityTile =  Reflection.GetField(targetKingdom.kingdom.capital.GetType(),targetKingdom.kingdom.capital,"_cityTile") as WorldTile;
-                city.army.moveTo(cityTile);
+                city.army.MoveToTile(cityTile);
             }
         }
 
@@ -530,7 +531,7 @@ namespace BarrageGame
             foreach (City city in kingdom.cities)
             {
                 if(GameHelper.CityThings.IsPlayerControl(city))continue;    // 玩家控制的城市，国王无法命令
-                city.army.moveTo(Reflection.GetField(city.GetType(),city,"_cityTile") as WorldTile);
+                city.army.MoveToTile(Reflection.GetField(city.GetType(),city,"_cityTile") as WorldTile);
             }
             return true;
         }
