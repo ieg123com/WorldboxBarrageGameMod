@@ -25,13 +25,11 @@ namespace ai.behaviours
                 pActor.timer_action = Toolbox.randomFloat(3f, 5f);
                 return BehResult.RepeatStep;
             }
-			Actor taxiActor = Reflection.GetField(requestForActor.taxi.GetType(),requestForActor.taxi,"actor") as Actor;
-			Boat component = taxiActor.GetComponent<Boat>();
+			Boat component = requestForActor.taxi.actor.GetComponent<Boat>();
 			WorldTile worldTile = null;
 			if (component.pickup_near_dock)
 			{
-				Actor componentActor = Reflection.GetField(component.GetType(),component,"actor") as Actor;
-				Building homeBuilding = Reflection.GetField(componentActor.GetType(),componentActor,"homeBuilding") as Building;
+				Building homeBuilding = Reflection.GetField(component.actor.GetType(),component.actor,"homeBuilding") as Building;
 				if (homeBuilding != null)
 				{
 					WorldTile constructionTile = homeBuilding.getConstructionTile();
@@ -43,7 +41,7 @@ namespace ai.behaviours
 			}
 			if (worldTile == null)
 			{
-				worldTile = PathfinderTools.raycastTileForUnitToEmbark(pActor.currentTile, taxiActor.currentTile);
+				worldTile = PathfinderTools.raycastTileForUnitToEmbark(pActor.currentTile, requestForActor.taxi.actor.currentTile);
 			}
 			if (worldTile == null)
 			{

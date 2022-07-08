@@ -41,6 +41,7 @@ namespace BarrageGame
             ModEvent.actorGetHit = new Action<Actor, float, bool, AttackType, BaseSimObject, bool>(Event_ActorGetHit);
             ModEvent.kingdomStartPeace = new Action<Kingdom, Kingdom>(Event_KingdomStartPeace);
             ModEvent.kingdomStartWar = new Action<Kingdom, Kingdom>(Event_KingdomStartWar);
+            ModEvent.disembarkTo = new Action<Actor, Boat, WorldTile>(Event_disembarkTo);
         }
 
 
@@ -361,6 +362,16 @@ namespace BarrageGame
             {
                 mKingdom.AllKingdomAtWar.Add(targetMKingdom.id,targetMKingdom);
             }
+        }
+
+        static public void Event_disembarkTo(Actor pActor,Boat pBoat,WorldTile pTile)
+        {
+            if(pActor.commandTargetTile == null)
+            {
+                return;
+            }
+            pActor.goTo(pActor.commandTargetTile,false,false);
+            pActor.commandTargetTile = null;
         }
 
         static public void Event_KingdomStartPeace(Kingdom pKingdom,Kingdom pTarget)
