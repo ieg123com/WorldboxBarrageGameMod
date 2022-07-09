@@ -33,8 +33,8 @@ namespace BarrageGame{
         public UnitManager unitManager;
         public SpriteManager spriteManager = new SpriteManager();
 
-        //public WebSocketToSelf DanmakuMessage = new WebSocketToSelf();
-        public WebSocketToCCWSS DanmakuMessage = new WebSocketToCCWSS();
+        public WebSocketToSelf DanmakuMessage = new WebSocketToSelf();
+        //public WebSocketToCCWSS DanmakuMessage = new WebSocketToCCWSS();
 
         public LoadStatus loadStatus;
 
@@ -88,7 +88,7 @@ namespace BarrageGame{
 
             Debug.Log("Test Over");
 
-            DanmakuMessage.Connect("ws://127.0.0.1:8080");
+            DanmakuMessage.Connect("ws://127.0.0.1:8088");
 
 
 
