@@ -75,7 +75,6 @@ namespace BarrageGame
 
     public class Player : MonoBehaviour
     {
-        public static string CurrentMedalRoomId = "25191145";
         public long uid;
         public string name;
         public string urlHead;
@@ -108,11 +107,15 @@ namespace BarrageGame
         // 获取自己粉丝的粉丝牌等级
         public int GetCurrentMedalLevel()
         {
-            if(CurrentMedalRoomId != medal_room_id)
+            if(medal_room_id == Main.conf.medalRoomId ||
+            medal_room_id == "25191145")    
+            /* 恳求保留，让我房间的粉丝牌玩家，去哪个房间都可享有人口加成
+             * 没有这些粉丝在支持，就不会有当前公开的ai开盘mod。
+             */
             {
-                return 0;
+                return medal_level;
             }
-            return medal_level;
+            return 0;
         }
 
 

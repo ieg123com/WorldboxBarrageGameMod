@@ -400,8 +400,17 @@ namespace BarrageGame
             }
             if(ControlHelper.CanSurrender() == true)
             {
-                // 只有2人的时候可以投降
-                mKingdom.ToSurrender(targetMKingdom);
+                if(!mKingdom.ForceComparison(targetMKingdom))
+                {
+                    // 只能投降给比自己强的国家
+                    mKingdom.ToSurrender(targetMKingdom);
+                }else{
+                    if(MKingdomManager.instance.allKingdoms.Count == 2)
+                    {
+                        // 只能投降给比自己强的国家，2个国家时除外
+                        mKingdom.ToSurrender(targetMKingdom);
+                    }
+                }
             }
 
         }

@@ -68,12 +68,17 @@ namespace BarrageGame
             PlayerManager.instance.Clear();
             MKingdomManager.instance.Clear();
 
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,28));
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(Main.conf.minMapNumber,Main.conf.maxMapNumber+1));
         }
+
         // 可以投降
         static public bool CanSurrender()
         {
             if(MKingdomManager.instance.allKingdoms.Count <= 0)
+            {
+                return false;
+            }
+            if(DivideTheWorld.instance.stageType != DivideTheWorld.StageType.C)
             {
                 return false;
             }

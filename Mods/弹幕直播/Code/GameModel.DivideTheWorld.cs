@@ -152,7 +152,7 @@ namespace BarrageGame
                 }
                 diffYear = (diffYear > 200)?200:diffYear;
                 GameHelper.SetTimeScale(5f + 15f * (diffYear / 200f));
-                return;
+                if(Main.conf.robotAI == false) return;
                 if(MKingdomManager.instance.allKingdoms.Count > 2){
                     // 简易ai
                     {

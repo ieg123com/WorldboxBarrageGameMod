@@ -10,6 +10,19 @@ using ReflectionUtility;
 
 namespace BarrageGame{
 
+
+    public class Conf
+    {
+        // 机器人ai(主动攻击玩家) 是否开启
+        public bool robotAI = false;
+        // 随机的地图编号范围
+        public int minMapNumber = 1;
+        public int maxMapNumber = 27;
+        // 房间号(用于粉丝勋章，人口加成)
+        public string medalRoomId = "25191145";
+    }
+
+
     public class User
     {
         public string _id;
@@ -25,6 +38,8 @@ namespace BarrageGame{
         static public bool startGame = false;
         // 可以宣战
         static public bool startWar = false;
+
+        static public Conf conf = new Conf();
 
         public MessageDistribute messageDistribute;
         public PlayerManager playerManager;
@@ -121,7 +136,7 @@ namespace BarrageGame{
 
         void Start()
         {
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(1,28));
+            GameHelper.LoadMapStore(UnityEngine.Random.Range(Main.conf.minMapNumber,Main.conf.maxMapNumber+1));
             MapNamesManager.instance.gameObject.AddComponent<UIKingdomList>().RefreshDisplay();
             MapNamesManager.instance.gameObject.AddComponent<UIDamageManager>();
             CanvasMain.instance.transformWindows.gameObject.AddComponent<UILoading>();
