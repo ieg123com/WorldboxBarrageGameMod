@@ -382,7 +382,7 @@ namespace BarrageGame
 
         static public void MsgSurrender(Player player,MessageDistribute.NormalMsg msg,List<string> comm)
         {
-            if(player.kingdomCivId == null || player.kingdomCivId == "")
+            if(player.kingdomCivId == null || player.isKingPlayer == false)
             {
                 Debug.Log($"玩家 {player.name} 还没加入国家");
                 return;
