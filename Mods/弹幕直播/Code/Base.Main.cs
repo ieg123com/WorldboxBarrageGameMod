@@ -136,7 +136,7 @@ namespace BarrageGame{
 
         void Start()
         {
-            GameHelper.LoadMapStore(UnityEngine.Random.Range(Main.conf.minMapNumber,Main.conf.maxMapNumber+1));
+            //GameHelper.LoadMapStore(UnityEngine.Random.Range(Main.conf.minMapNumber,Main.conf.maxMapNumber+1));
             MapNamesManager.instance.gameObject.AddComponent<UIKingdomList>().RefreshDisplay();
             MapNamesManager.instance.gameObject.AddComponent<UIDamageManager>();
             CanvasMain.instance.transformWindows.gameObject.AddComponent<UILoading>();
